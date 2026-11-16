@@ -1,0 +1,882 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELORA — Elegance in Every Detail | Luxury Fashion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: { cream:'#F8F5EF', beige:'#E9DFD0', champagne:'#D5C2A5', bark:'#8B7058', charcoal:'#29251F', stone2:'#6B6257' },
+      fontFamily: { serif:['"Playfair Display"','serif'], sans:['"DM Sans"','sans-serif'] },
+      letterSpacing: { widest2:'0.28em' }
+    }
+  }
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root{ --cream:#F8F5EF; --beige:#E9DFD0; --champ:#D5C2A5; --bark:#8B7058; --char:#29251F; }
+  *{ -webkit-tap-highlight-color:transparent; }
+  html{ scroll-behavior:smooth; }
+  body{ background:var(--cream); color:var(--char); font-family:'DM Sans',sans-serif; overflow-x:hidden; }
+  ::selection{ background:#29251F; color:#F8F5EF; }
+  ::-webkit-scrollbar{ width:10px; height:8px; }
+  ::-webkit-scrollbar-track{ background:#F8F5EF; }
+  ::-webkit-scrollbar-thumb{ background:#D5C2A5; border-radius:99px; border:2px solid #F8F5EF; }
+  ::-webkit-scrollbar-thumb:hover{ background:#8B7058; }
+  .serif{ font-family:'Playfair Display',serif; }
+  .eyebrow{ font-size:11px; letter-spacing:0.32em; text-transform:uppercase; font-weight:600; }
+  .hairline{ border-color:rgba(41,37,31,.12); }
+  /* Preloader */
+  #preloader{ position:fixed; inset:0; z-index:200; background:#29251F; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:18px; transition:opacity .8s ease, visibility .8s; }
+  #preloader.hide{ opacity:0; visibility:hidden; }
+  .loader-letters span{ display:inline-block; font-family:'Playfair Display',serif; font-size:clamp(2.5rem,7vw,5rem); color:#F8F5EF; letter-spacing:.18em; opacity:0; animation:letterIn 1.2s forwards; }
+  .loader-letters span:nth-child(1){animation-delay:.05s} .loader-letters span:nth-child(2){animation-delay:.15s} .loader-letters span:nth-child(3){animation-delay:.25s} .loader-letters span:nth-child(4){animation-delay:.35s} .loader-letters span:nth-child(5){animation-delay:.45s} .loader-letters span:nth-child(6){animation-delay:.55s}
+  @keyframes letterIn{ from{opacity:0; transform:translateY(24px)} to{opacity:1; transform:translateY(0)} }
+  .loader-bar{ width:180px; height:1px; background:rgba(248,245,239,.2); overflow:hidden; } .loader-bar i{ display:block; height:100%; width:40%; background:#D5C2A5; animation:barSlide 1.1s infinite; } @keyframes barSlide{ 0%{transform:translateX(-100%)} 100%{transform:translateX(450%)} }
+  /* Nav */
+  #siteHeader{ transition:all .4s ease; } #siteHeader.scrolled{ background:rgba(248,245,239,.92); backdrop-filter:blur(18px); box-shadow:0 1px 0 rgba(41,37,31,.1), 0 12px 40px -18px rgba(41,37,31,.25); }
+  .nav-link{ position:relative; font-size:12.5px; letter-spacing:.18em; text-transform:uppercase; font-weight:500; padding:6px 2px; } .nav-link:after{ content:''; position:absolute; left:0; bottom:0; height:1px; width:0; background:#29251F; transition:width .35s ease; } .nav-link:hover:after,.nav-link.active:after{ width:100%; }
+  /* Hero */
+  .hero-kenburns{ animation:kenburns 18s ease-in-out infinite alternate; } @keyframes kenburns{ from{transform:scale(1)} to{transform:scale(1.12)} }
+  .hero-fade{ animation:heroUp 1.1s cubic-bezier(.16,1,.3,1) both; } @keyframes heroUp{ from{opacity:0; transform:translateY(36px)} to{opacity:1; transform:translateY(0)} }
+  .marquee-track{ display:flex; gap:0; width:max-content; animation:marquee 28s linear infinite; } @keyframes marquee{ to{transform:translateX(-50%)} }
+  /* Product card */
+  .p-card{ background:#fff; border:1px solid rgba(41,37,31,.09); transition:transform .5s cubic-bezier(.16,1,.3,1), box-shadow .5s; } .p-card:hover{ transform:translateY(-6px); box-shadow:0 30px 60px -20px rgba(41,37,31,.28); }
+  .p-media{ position:relative; overflow:hidden; aspect-ratio:3/4; background:#E9DFD0; } .p-media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:opacity .7s ease, transform 1.1s cubic-bezier(.16,1,.3,1); }
+  .p-media .img-b{ opacity:0; } .p-card:hover .img-b{ opacity:1; } .p-card:hover .img-a{ opacity:0; } .p-card:hover .p-media img{ transform:scale(1.06); }
+  .p-actions{ position:absolute; left:12px; right:12px; bottom:12px; display:flex; gap:8px; opacity:0; transform:translateY(12px); transition:all .45s cubic-bezier(.16,1,.3,1); } .p-card:hover .p-actions{ opacity:1; transform:translateY(0); }
+  @media(hover:none){ .p-actions{opacity:1; transform:none} }
+  .wish-btn{ position:absolute; top:12px; right:12px; width:36px; height:36px; border-radius:99px; background:rgba(255,255,255,.92); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; transition:all .3s; box-shadow:0 6px 18px rgba(0,0,0,.12); } .wish-btn:hover{ transform:scale(1.08); } .wish-btn.active svg{ fill:#29251F; }
+  .badge{ font-size:10px; letter-spacing:.18em; text-transform:uppercase; font-weight:700; padding:6px 10px; }
+  .size-dot{ min-width:32px; height:32px; padding:0 8px; border:1px solid rgba(41,37,31,.18); font-size:12px; display:inline-flex; align-items:center; justify-content:center; transition:all .25s; background:#fff; } .size-dot:hover{ border-color:#29251F; } .size-dot.sel{ background:#29251F; color:#fff; border-color:#29251F; }
+  .color-dot{ width:18px; height:18px; border-radius:99px; border:2px solid #fff; outline:1px solid rgba(41,37,31,.2); cursor:pointer; } .color-dot.sel{ outline:2px solid #29251F; }
+  /* Buttons */
+  .btn-dark{ background:#29251F; color:#F8F5EF; letter-spacing:.18em; text-transform:uppercase; font-size:12px; font-weight:600; padding:16px 32px; transition:all .35s; border:1px solid #29251F; } .btn-dark:hover{ background:transparent; color:#29251F; }
+  .btn-light{ background:transparent; color:#fff; border:1px solid rgba(255,255,255,.7); letter-spacing:.18em; text-transform:uppercase; font-size:12px; font-weight:600; padding:16px 32px; transition:all .35s; } .btn-light:hover{ background:#fff; color:#29251F; }
+  .btn-cream{ background:#F8F5EF; color:#29251F; letter-spacing:.18em; text-transform:uppercase; font-size:12px; font-weight:600; padding:16px 32px; transition:all .35s; border:1px solid #F8F5EF; } .btn-cream:hover{ background:transparent; color:#F8F5EF; }
+  .btn-outline{ border:1px solid rgba(41,37,31,.25); letter-spacing:.18em; text-transform:uppercase; font-size:11.5px; font-weight:600; padding:13px 24px; transition:all .3s; background:#fff; } .btn-outline:hover{ background:#29251F; color:#fff; border-color:#29251F; }
+  /* Drawers */
+  .drawer{ position:fixed; top:0; right:0; height:100dvh; width:min(440px,100vw); background:#FDFBF7; z-index:90; transform:translateX(105%); transition:transform .55s cubic-bezier(.16,1,.3,1); display:flex; flex-direction:column; box-shadow:-30px 0 80px rgba(0,0,0,.18); } .drawer.open{ transform:none; }
+  .overlay{ position:fixed; inset:0; background:rgba(41,37,31,.45); backdrop-filter:blur(3px); z-index:80; opacity:0; pointer-events:none; transition:opacity .4s; } .overlay.show{ opacity:1; pointer-events:auto; }
+  .modal-wrap{ position:fixed; inset:0; z-index:95; display:flex; align-items:center; justify-content:center; padding:16px; opacity:0; pointer-events:none; transition:opacity .35s; } .modal-wrap.show{ opacity:1; pointer-events:auto; } .modal-box{ transform:translateY(18px) scale(.98); transition:transform .45s cubic-bezier(.16,1,.3,1); } .modal-wrap.show .modal-box{ transform:none; }
+  /* Reveal */
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .9s ease, transform .9s cubic-bezier(.16,1,.3,1); } .reveal.in{ opacity:1; transform:none; }
+  /* Inputs */
+  .lux-input{ width:100%; background:#fff; border:1px solid rgba(41,37,31,.16); padding:14px 16px; font-size:14px; outline:none; transition:all .3s; } .lux-input:focus{ border-color:#29251F; box-shadow:0 0 0 3px rgba(213,194,165,.35); } label.lux-label{ font-size:11px; letter-spacing:.2em; text-transform:uppercase; font-weight:600; color:#6B6257; margin-bottom:8px; display:block; }
+  .pill{ font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; font-weight:600; padding:10px 18px; border:1px solid rgba(41,37,31,.16); background:#fff; white-space:nowrap; transition:all .3s; cursor:pointer; } .pill:hover{ border-color:#29251F; } .pill.active{ background:#29251F; color:#F8F5EF; border-color:#29251F; }
+  /* Toast */
+  #toasts{ position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:120; display:flex; flex-direction:column; gap:10px; align-items:center; width:min(420px,92vw); }
+  .toast{ background:#29251F; color:#F8F5EF; padding:14px 18px; display:flex; gap:12px; align-items:center; width:100%; box-shadow:0 20px 50px rgba(0,0,0,.3); border-left:3px solid #D5C2A5; animation:toastIn .5s cubic-bezier(.16,1,.3,1); font-size:13.5px; } @keyframes toastIn{ from{opacity:0; transform:translateY(16px)} to{opacity:1; transform:none} } .toast.out{ opacity:0; transform:translateY(10px); transition:all .4s; }
+  /* Misc */
+  . editorial-line{ height:1px; background:rgba(41,37,31,.14); } .no-scrollbar::-webkit-scrollbar{display:none} .no-scrollbar{scrollbar-width:none}
+  .collection-card img{ transition:transform 1.2s cubic-bezier(.16,1,.3,1); } .collection-card:hover img{ transform:scale(1.07); }
+  .thumb{ border:1px solid rgba(41,37,31,.15); cursor:pointer; transition:all .3s; } .thumb.active{ border-color:#29251F; box-shadow:0 0 0 1px #29251F; }
+  .admin-tab{ padding:12px 18px; font-size:12px; letter-spacing:.16em; text-transform:uppercase; font-weight:600; color:#6B6257; border-left:2px solid transparent; cursor:pointer; transition:all .25s; } .admin-tab.active,.admin-tab:hover{ color:#29251F; background:#fff; border-left-color:#29251F; }
+  .stat-card{ background:#fff; border:1px solid rgba(41,37,31,.1); padding:22px; } details summary::-webkit-details-marker{display:none}
+  input[type=range]{ accent-color:#29251F; }
+  .tick{ width:22px; height:22px; border-radius:99px; background:#29251F; color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; }
+  @media(max-width:768px){ .p-actions{ position:static; opacity:1; transform:none; padding:10px 12px 14px; } .p-media{ aspect-ratio:3/3.6; } }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- PRELOADER -->
+<div id="preloader">
+  <div class="loader-letters"><span>V</span><span>E</span><span>L</span><span>O</span><span>R</span><span>A</span></div>
+  <div class="eyebrow" style="color:#D5C2A5">Elegance in Every Detail</div>
+  <div class="loader-bar"><i></i></div>
+</div>
+
+<!-- ANNOUNCEMENT -->
+<div class="bg-charcoal text-cream text-center py-2.5 px-4 relative z-[60]">
+  <p id="announceText" class="text-[11px] tracking-[0.22em] uppercase font-medium transition-opacity duration-500">Complimentary shipping on orders over PKR 15,000</p>
+</div>
+
+<!-- HEADER -->
+<header id="siteHeader" class="sticky top-0 z-[70] bg-cream/90 border-b hairline">
+  <div class="max-w-[1400px] mx-auto px-5 md:px-10">
+    <div class="flex items-center justify-between h-[72px] gap-4">
+      <div class="flex items-center gap-4 lg:hidden">
+        <button onclick="toggleMobile(true)" aria-label="Open menu" class="w-10 h-10 flex flex-col items-center justify-center gap-[5px]"><span class="w-6 h-[1.5px] bg-charcoal block"></span><span class="w-6 h-[1.5px] bg-charcoal block"></span><span class="w-4 h-[1.5px] bg-charcoal block self-start ml-2"></span></button>
+      </div>
+      <nav class="hidden lg:flex items-center gap-8 flex-1">
+        <a href="#" onclick="goShop('men');return false;" class="nav-link" data-nav="men">Men</a>
+        <a href="#" onclick="goShop('women');return false;" class="nav-link" data-nav="women">Women</a>
+        <a href="#" onclick="goShop('new');return false;" class="nav-link" data-nav="new">New Arrivals</a>
+        <a href="#" onclick="showPage('collections');return false;" class="nav-link" data-nav="collections">Collections</a>
+        <a href="#" onclick="showPage('contact');return false;" class="nav-link" data-nav="contact">Contact</a>
+      </nav>
+      <a href="#" onclick="showPage('home');return false;" class="text-center select-none" aria-label="Velora home">
+        <div class="serif text-[30px] md:text-[34px] tracking-[0.22em] font-semibold leading-none pl-2">VELORA</div>
+        <div class="text-[8.5px] tracking-[0.42em] uppercase text-stone2 mt-1 hidden sm:block">Elegance in Every Detail</div>
+      </a>
+      <div class="flex items-center justify-end gap-1 sm:gap-2 flex-1">
+        <button onclick="openSearch()" aria-label="Search" class="w-10 h-10 rounded-full hover:bg-beige flex items-center justify-center transition"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+        <button onclick="openWishlist()" aria-label="Wishlist" class="w-10 h-10 rounded-full hover:bg-beige hidden sm:flex items-center justify-center transition relative"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21C7 16.5 3 13.2 3 9.5 3 7 5 5 7.5 5c1.7 0 3.3.9 4.5 2.6C13.2 5.9 14.8 5 16.5 5 19 5 21 7 21 9.5c0 3.7-4 7-9 11.5z"/></svg><span id="wishCount" class="absolute top-1 right-0.5 bg-charcoal text-cream text-[10px] w-[17px] h-[17px] rounded-full hidden items-center justify-center">0</span></button>
+        <button onclick="openCart()" aria-label="Shopping bag" class="w-10 h-10 rounded-full hover:bg-beige flex items-center justify-center transition relative"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 8h15l-1.5 12H7.5L6 8z"/><path d="M9 8V6a3 3 0 016 0v2"/></svg><span id="bagCount" class="absolute top-0.5 right-0 bg-charcoal text-cream text-[10px] w-[18px] h-[18px] rounded-full hidden items-center justify-center font-semibold">0</span></button>
+        <button onclick="showPage('admin')" aria-label="Admin" class="w-10 h-10 rounded-full hover:bg-beige hidden md:flex items-center justify-center transition"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg></button>
+        <button onclick="goShop('all')" class="btn-dark !py-2.5 !px-5 hidden xl:block ml-2">Shop Now</button>
+      </div>
+    </div>
+  </div>
+  <div class="lg:hidden border-t hairline overflow-x-auto no-scrollbar"><div class="flex gap-6 px-5 py-3 text-[11px] tracking-[0.18em] uppercase font-semibold whitespace-nowrap"><a href="#" onclick="goShop('men');return false;">Men</a><a href="#" onclick="goShop('women');return false;">Women</a><a href="#" onclick="goShop('new');return false;">New In</a><a href="#" onclick="showPage('collections');return false;">Collections</a><a href="#" onclick="showPage('contact');return false;">Contact</a><a href="#" onclick="showPage('admin');return false;" class="text-bark">Admin</a></div></div>
+</header>
+
+<!-- MOBILE MENU -->
+<div id="mobileMenu" class="fixed inset-0 z-[100] pointer-events-none">
+  <div class="absolute inset-0 bg-charcoal/50 opacity-0 transition" id="mobileBg" onclick="toggleMobile(false)"></div>
+  <div class="absolute left-0 top-0 h-full w-[86vw] max-w-[360px] bg-cream -translate-x-full transition-transform duration-500 flex flex-col" id="mobilePanel" style="transition-timing-function:cubic-bezier(.16,1,.3,1)">
+    <div class="flex items-center justify-between p-6 border-b hairline"><div class="serif text-2xl tracking-[0.2em]">VELORA</div><button onclick="toggleMobile(false)" class="w-10 h-10 border hairline rounded-full">✕</button></div>
+    <nav class="p-6 flex flex-col gap-1 text-lg serif">
+      <a href="#" onclick="goShop('men');return false;" class="py-3 border-b hairline flex justify-between">Men <span>→</span></a>
+      <a href="#" onclick="goShop('women');return false;" class="py-3 border-b hairline flex justify-between">Women <span>→</span></a>
+      <a href="#" onclick="goShop('new');return false;" class="py-3 border-b hairline flex justify-between">New Arrivals <span>→</span></a>
+      <a href="#" onclick="showPage('collections');return false;" class="py-3 border-b hairline flex justify-between">Collections <span>→</span></a>
+      <a href="#" onclick="showPage('contact');return false;" class="py-3 border-b hairline flex justify-between">Contact <span>→</span></a>
+      <a href="#" onclick="showPage('admin');return false;" class="py-3 flex justify-between text-bark">Admin Panel <span>→</span></a>
+    </nav>
+    <div class="mt-auto p-6 bg-charcoal text-cream"><p class="eyebrow !text-champagne mb-2">Client Care</p><p class="text-sm opacity-80">+92 21 3580 0000<br>care@velora.pk</p></div>
+  </div>
+</div>
+
+<!-- SEARCH OVERLAY -->
+<div id="searchOverlay" class="fixed inset-0 z-[100] bg-cream/98 hidden flex-col" style="backdrop-filter:blur(12px)">
+  <div class="max-w-[900px] w-full mx-auto px-6 pt-24 pb-10 flex flex-col h-full">
+    <div class="flex items-center justify-between mb-8"><span class="eyebrow">Search Velora</span><button onclick="closeSearch()" class="w-11 h-11 border hairline rounded-full hover:bg-charcoal hover:text-cream transition">✕</button></div>
+    <div class="relative"><input id="searchInput" oninput="liveSearch(this.value)" placeholder="Search dresses, abayas, jackets, shirts..." class="w-full bg-transparent serif text-3xl md:text-5xl placeholder:text-charcoal/25 outline-none border-b border-charcoal/20 pb-4"><svg class="absolute right-2 top-3 opacity-40" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></div>
+    <div class="flex flex-wrap gap-2 mt-6"><span class="text-xs uppercase tracking-widest text-stone2 mr-2 mt-2">Popular:</span><button class="pill" onclick="quickSearch('Abaya')">Abaya</button><button class="pill" onclick="quickSearch('Dress')">Dress</button><button class="pill" onclick="quickSearch('Jacket')">Jacket</button><button class="pill" onclick="quickSearch('Silk')">Silk</button><button class="pill" onclick="quickSearch('Coat')">Coat</button></div>
+    <div id="searchResults" class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 overflow-y-auto pb-10"></div>
+  </div>
+</div>
+
+<main>
+<!-- ============ HOME ============ -->
+<section id="page-home" class="page">
+  <!-- HERO -->
+  <div class="relative min-h-[92vh] flex items-end overflow-hidden bg-charcoal text-white">
+    <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2000&auto=format&fit=crop" alt="Velora editorial" class="absolute inset-0 w-full h-full object-cover hero-kenburns opacity-90">
+    <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(20,17,12,.78) 0%, rgba(20,17,12,.25) 45%, rgba(20,17,12,.15) 100%)"></div>
+    <div class="absolute top-8 left-5 md:left-10 flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-champagne animate-pulse"></span><span class="text-[11px] tracking-[0.3em] uppercase">Fall — Winter 2026 · The Timeless Edit</span></div>
+    <div class="absolute top-8 right-5 md:right-10 hidden md:flex gap-2 text-[11px] tracking-[0.25em] uppercase opacity-80"><span>Est. Lahore</span><span>·</span><span>Paris · Dubai</span></div>
+    <div class="relative max-w-[1400px] mx-auto px-5 md:px-10 pb-14 pt-40 w-full">
+      <p class="eyebrow !text-champagne hero-fade">New Season · Men & Women</p>
+      <h1 class="serif hero-fade leading-[0.95] mt-4 max-w-[900px]" style="font-size:clamp(3rem,8.5vw,7.2rem); animation-delay:.15s">Elegance in<br><em class="font-medium">Every Detail.</em></h1>
+      <p class="hero-fade mt-6 max-w-[520px] text-[15px] md:text-base leading-relaxed text-white/80" style="animation-delay:.3s">Timeless tailoring, modern minimalism and artisanal fabrics — crafted for wardrobes that outlive seasons.</p>
+      <div class="hero-fade flex flex-wrap gap-4 mt-9" style="animation-delay:.45s">
+        <button onclick="goShop('women')" class="btn-cream">Shop Women →</button>
+        <button onclick="goShop('men')" class="btn-light">Shop Men</button>
+      </div>
+      <div class="hero-fade flex gap-10 mt-12 pt-8 border-t border-white/20 text-sm" style="animation-delay:.6s">
+        <div><div class="serif text-2xl">120+</div><div class="text-[11px] tracking-[0.2em] uppercase opacity-70">Artisan Styles</div></div>
+        <div><div class="serif text-2xl">48k</div><div class="text-[11px] tracking-[0.2em] uppercase opacity-70">Velora Clients</div></div>
+        <div class="hidden sm:block"><div class="serif text-2xl">4.9 ★</div><div class="text-[11px] tracking-[0.2em] uppercase opacity-70">Average Rating</div></div>
+      </div>
+    </div>
+    <div class="absolute bottom-6 right-8 hidden md:flex flex-col items-center gap-2 opacity-70"><span class="text-[10px] tracking-[0.3em] uppercase" style="writing-mode:vertical-rl">Scroll</span><span class="w-[1px] h-12 bg-white/50 overflow-hidden relative"><i class="absolute inset-x-0 top-0 h-1/2 bg-white animate-bounce block"></i></span></div>
+  </div>
+
+  <!-- MARQUEE -->
+  <div class="bg-charcoal text-cream border-t border-white/10 py-4 overflow-hidden"><div class="marquee-track serif italic text-[15px] tracking-wide">
+    <div class="flex gap-12 pr-12" id="marqueeA"></div><div class="flex gap-12 pr-12" id="marqueeB"></div>
+  </div></div>
+
+  <!-- FEATURED COLLECTIONS -->
+  <div class="max-w-[1400px] mx-auto px-5 md:px-10 py-20 md:py-28">
+    <div class="flex flex-wrap items-end justify-between gap-6 mb-10 reveal"><div><p class="eyebrow text-bark">Curated For You</p><h2 class="serif text-4xl md:text-[3.4rem] leading-tight mt-3">Featured <em>Collections</em></h2></div><button onclick="showPage('collections')" class="btn-outline">View All Collections</button></div>
+    <div class="grid md:grid-cols-12 gap-5">
+      <div class="collection-card md:col-span-7 relative overflow-hidden group cursor-pointer min-h-[420px] md:min-h-[560px] reveal" onclick="goShop('women')"><img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1400&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover" alt="Women"><div class="absolute inset-0" style="background:linear-gradient(to top,rgba(20,17,12,.65),transparent 60%)"></div><div class="absolute bottom-0 p-8 text-white"><p class="eyebrow !text-champagne">01 — Women</p><h3 class="serif text-3xl md:text-4xl mt-2">The Modern Muse</h3><p class="text-white/75 text-sm mt-2">Dresses · Abayas · Outerwear</p><span class="inline-block mt-4 text-[12px] tracking-[0.2em] uppercase border-b border-champagne pb-1 group-hover:gap-3 transition-all">Explore →</span></div></div>
+      <div class="md:col-span-5 flex flex-col gap-5">
+        <div class="collection-card relative overflow-hidden group cursor-pointer flex-1 min-h-[260px] reveal" onclick="goShop('men')"><img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?q=80&w=1000&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover" alt="Men"><div class="absolute inset-0" style="background:linear-gradient(to top,rgba(20,17,12,.65),transparent 60%)"></div><div class="absolute bottom-0 p-7 text-white"><p class="eyebrow !text-champagne">02 — Men</p><h3 class="serif text-2xl md:text-3xl mt-1">Tailored Precision</h3><span class="inline-block mt-3 text-[12px] tracking-[0.2em] uppercase border-b border-champagne pb-1">Explore →</span></div></div>
+        <div class="grid grid-cols-2 gap-5">
+          <div class="collection-card relative overflow-hidden group cursor-pointer min-h-[240px] reveal" onclick="goShop('women','Abayas')"><img src="https://images.unsplash.com/photo-1591369822096-ffd140ec948f?q=80&w=800&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover" alt="Modest"><div class="absolute inset-0" style="background:linear-gradient(to top,rgba(20,17,12,.65),transparent 60%)"></div><div class="absolute bottom-0 p-5 text-white"><h3 class="serif text-xl">Modest Edit</h3><span class="text-[11px] tracking-[0.2em] uppercase border-b border-champagne pb-1">Shop →</span></div></div>
+          <div class="collection-card relative overflow-hidden group cursor-pointer min-h-[240px] reveal" onclick="goShop('all','Accessories')"><img src="https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=800&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover" alt="Accessories"><div class="absolute inset-0" style="background:linear-gradient(to top,rgba(20,17,12,.65),transparent 60%)"></div><div class="absolute bottom-0 p-5 text-white"><h3 class="serif text-xl">Accessories</h3><span class="text-[11px] tracking-[0.2em] uppercase border-b border-champagne pb-1">Shop →</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW ARRIVALS -->
+  <div class="bg-white border-y hairline">
+    <div class="max-w-[1400px] mx-auto px-5 md:px-10 py-20">
+      <div class="text-center mb-10 reveal"><p class="eyebrow text-bark">Just Landed</p><h2 class="serif text-4xl md:text-[3.2rem] mt-3">New <em>Arrivals</em></h2><p class="text-stone2 text-sm mt-3 max-w-[520px] mx-auto">Fresh silhouettes in silk, cashmere, premium cotton and crepe — limited pieces per size.</p></div>
+      <div class="flex justify-center gap-2 mb-10 flex-wrap reveal"><button class="pill active" data-ntab="all" onclick="setNewTab('all',this)">All</button><button class="pill" data-ntab="women" onclick="setNewTab('women',this)">Women</button><button class="pill" data-ntab="men" onclick="setNewTab('men',this)">Men</button></div>
+      <div id="newGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"></div>
+      <div class="text-center mt-10"><button onclick="goShop('new')" class="btn-dark">View All New Arrivals</button></div>
+    </div>
+  </div>
+
+  <!-- BEST SELLERS -->
+  <div class="max-w-[1400px] mx-auto px-5 md:px-10 py-20 md:py-24">
+    <div class="flex items-end justify-between gap-6 mb-8 reveal"><div><p class="eyebrow text-bark">Most Coveted</p><h2 class="serif text-4xl md:text-[3.2rem] mt-3">Best <em>Sellers</em></h2></div><div class="hidden md:flex gap-2"><button onclick="scrollBest(-1)" class="w-12 h-12 border hairline rounded-full hover:bg-charcoal hover:text-cream transition">←</button><button onclick="scrollBest(1)" class="w-12 h-12 border hairline rounded-full hover:bg-charcoal hover:text-cream transition">→</button></div></div>
+    <div id="bestTrack" class="flex gap-5 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-2 -mx-5 px-5 md:mx-0 md:px-0"></div>
+  </div>
+
+  <!-- PROMO BANNER with countdown -->
+  <div class="max-w-[1400px] mx-auto px-5 md:px-10 pb-20">
+    <div class="grid md:grid-cols-2 bg-charcoal text-cream overflow-hidden reveal">
+      <div class="p-10 md:p-16 flex flex-col justify-center">
+        <p class="eyebrow !text-champagne">Private Sale · Up to 30% Off</p>
+        <h3 class="serif text-4xl md:text-5xl mt-4 leading-tight">The Festive <em class="text-champagne">Edit</em> is Live</h3>
+        <p class="text-white/70 text-sm mt-4 leading-relaxed">Evening gowns, silk abayas, tailored overcoats and occasion wear. Ends soon — pieces are selling fast.</p>
+        <div class="flex gap-3 mt-7"><div class="bg-white/10 border border-white/15 px-4 py-3 text-center min-w-[72px]"><div id="cdD" class="serif text-2xl">02</div><div class="text-[10px] tracking-[0.2em] uppercase opacity-60">Days</div></div><div class="bg-white/10 border border-white/15 px-4 py-3 text-center min-w-[72px]"><div id="cdH" class="serif text-2xl">11</div><div class="text-[10px] tracking-[0.2em] uppercase opacity-60">Hours</div></div><div class="bg-white/10 border border-white/15 px-4 py-3 text-center min-w-[72px]"><div id="cdM" class="serif text-2xl">45</div><div class="text-[10px] tracking-[0.2em] uppercase opacity-60">Mins</div></div><div class="bg-white/10 border border-white/15 px-4 py-3 text-center min-w-[72px]"><div id="cdS" class="serif text-2xl">30</div><div class="text-[10px] tracking-[0.2em] uppercase opacity-60">Secs</div></div></div>
+        <div class="flex flex-wrap gap-4 mt-8"><button onclick="goShop('all')" class="btn-cream">Shop The Sale</button><button onclick="showPage('collections')" class="btn-light">Lookbook</button></div>
+      </div>
+      <div class="relative min-h-[360px] md:min-h-[540px]"><img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=1200&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover" alt="Sale"><div class="absolute top-6 left-6 bg-cream text-charcoal badge">— 30% Selected Styles</div></div>
+    </div>
+  </div>
+
+  <!-- SHOP BY CATEGORY STRIP -->
+  <div class="border-y hairline bg-beige/40"><div class="max-w-[1400px] mx-auto px-5 md:px-10 py-14">
+    <p class="eyebrow text-bark mb-6 reveal">Shop By Category</p>
+    <div id="catStrip" class="flex gap-3 overflow-x-auto no-scrollbar pb-1"></div>
+  </div></div>
+
+  <!-- BRAND STORY -->
+  <div class="max-w-[1400px] mx-auto px-5 md:px-10 py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center">
+    <div class="grid grid-cols-2 gap-4 reveal">
+      <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=800&auto=format&fit=crop" class="w-full h-[280px] md:h-[420px] object-cover" alt="Atelier">
+      <img src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=800&auto=format&fit=crop" class="w-full h-[280px] md:h-[420px] object-cover mt-10" alt="Fabric">
+    </div>
+    <div class="reveal"><p class="eyebrow text-bark">Our Story · Since 2016</p><h2 class="serif text-4xl md:text-[3.2rem] leading-tight mt-4">Crafted in Lahore,<br><em>Worn Worldwide.</em></h2><p class="text-stone2 leading-relaxed mt-6 text-[15px]">VELORA began with a single atelier and a belief — that true luxury is quiet. No loud logos, no fleeting trends. Just impeccable cuts, honest fabrics and details you feel: French seams, mother-of-pearl buttons, hand-finished hems.</p><p class="text-stone2 leading-relaxed mt-4 text-[15px]">Today, our menswear and womenswear — from silk dresses to premium abayas and tailored overcoats — dress clients across Pakistan, the Gulf and beyond.</p>
+      <div class="grid grid-cols-3 gap-6 mt-8 pt-8 border-t hairline"><div><div class="serif text-3xl">32</div><div class="text-[11px] tracking-[0.18em] uppercase text-stone2 mt-1">Master Artisans</div></div><div><div class="serif text-3xl">100%</div><div class="text-[11px] tracking-[0.18em] uppercase text-stone2 mt-1">Premium Fabrics</div></div><div><div class="serif text-3xl">14</div><div class="text-[11px] tracking-[0.18em] uppercase text-stone2 mt-1">Cities Served</div></div></div>
+      <button onclick="showPage('contact')" class="btn-outline mt-8">Visit Our Flagship</button>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div class="bg-white border-y hairline"><div class="max-w-[1100px] mx-auto px-5 md:px-10 py-20 text-center">
+    <p class="eyebrow text-bark reveal">Client Love</p><h2 class="serif text-4xl mt-3 reveal">Worn & <em>Adored</em></h2>
+    <div class="relative mt-10 reveal"><div id="testiBox" class="transition-opacity duration-500"></div>
+      <div class="flex justify-center gap-2 mt-8" id="testiDots"></div>
+    </div>
+  </div></div>
+
+  <!-- NEWSLETTER -->
+  <div class="max-w-[1400px] mx-auto px-5 md:px-10 py-20"><div class="bg-beige/60 border hairline p-10 md:p-16 grid md:grid-cols-2 gap-10 items-center reveal">
+    <div><p class="eyebrow text-bark">The Velora Circle</p><h3 class="serif text-3xl md:text-4xl mt-3">Get 10% off your first order</h3><p class="text-sm text-stone2 mt-3">Early access to drops, private sales and styling notes. No spam — unsubscribe anytime.</p></div>
+    <form onsubmit="subscribe(event)" class="flex flex-col sm:flex-row gap-3"><input id="nlEmail" type="email" required placeholder="Your email address" class="lux-input !py-4 flex-1"><button class="btn-dark whitespace-nowrap">Subscribe</button></form>
+  </div></div>
+
+  <!-- PERKS -->
+  <div class="max-w-[1400px] mx-auto px-5 md:px-10 pb-20 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+    <div class="bg-white border hairline p-6 reveal"><div class="serif text-2xl">✦</div><p class="text-[12px] tracking-[0.18em] uppercase font-semibold mt-2">Free Shipping</p><p class="text-xs text-stone2 mt-1">Over PKR 15,000 nationwide</p></div>
+    <div class="bg-white border hairline p-6 reveal"><div class="serif text-2xl">◐</div><p class="text-[12px] tracking-[0.18em] uppercase font-semibold mt-2">Easy 14-Day Exchange</p><p class="text-xs text-stone2 mt-1">Hassle-free size swaps</p></div>
+    <div class="bg-white border hairline p-6 reveal"><div class="serif text-2xl">⬔</div><p class="text-[12px] tracking-[0.18em] uppercase font-semibold mt-2">Cash on Delivery</p><p class="text-xs text-stone2 mt-1">Available across Pakistan</p></div>
+    <div class="bg-white border hairline p-6 reveal"><div class="serif text-2xl">♡</div><p class="text-[12px] tracking-[0.18em] uppercase font-semibold mt-2">Hand-Finished</p><p class="text-xs text-stone2 mt-1">Quality checked twice</p></div>
+  </div>
+</section>
+
+<!-- ============ SHOP ============ -->
+<section id="page-shop" class="page hidden">
+  <div class="bg-charcoal text-cream"><div class="max-w-[1400px] mx-auto px-5 md:px-10 py-14 md:py-18 pt-14 pb-12"><p class="eyebrow !text-champagne" id="shopEyebrow">The Catalogue</p><h1 class="serif text-4xl md:text-6xl mt-3" id="shopTitle">Shop All</h1><p class="text-white/60 text-sm mt-3 max-w-[560px]" id="shopSub"></p><div class="text-[12px] tracking-widest uppercase opacity-60 mt-4"><a href="#" onclick="showPage('home');return false;" class="hover:text-champagne">Home</a> / <span id="shopCrumb">Shop</span></div></div></div>
+  <div class="max-w-[1400px] mx-auto px-5 md:px-10 py-10">
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Filters -->
+      <aside class="lg:w-[270px] shrink-0">
+        <div class="bg-white border hairline p-6 lg:sticky lg:top-[140px]">
+          <div class="flex items-center justify-between mb-5"><span class="eyebrow">Filters</span><button onclick="clearFilters()" class="text-xs underline text-bark">Clear all</button></div>
+          <div class="mb-6"><label class="lux-label">Search</label><input id="fSearch" oninput="shopState.search=this.value;renderShop()" placeholder="Search products..." class="lux-input !py-2.5"></div>
+          <div class="mb-6"><label class="lux-label">Category</label><div id="fCats" class="flex flex-wrap gap-2"></div></div>
+          <div class="mb-6"><label class="lux-label">Max Price · <span id="priceLabel" class="text-charcoal">PKR 50,000</span></label><input type="range" min="3000" max="50000" step="1000" value="50000" id="fPrice" class="w-full" oninput="shopState.maxPrice=+this.value;document.getElementById('priceLabel').textContent='PKR '+ (+this.value).toLocaleString();renderShop()"></div>
+          <div class="mb-6"><label class="lux-label">Size</label><div id="fSizes" class="flex flex-wrap gap-2"></div></div>
+          <div class="mb-2"><label class="lux-label">Availability</label><label class="flex items-center gap-2 text-sm cursor-pointer"><input type="checkbox" id="fSale" onchange="shopState.onlySale=this.checked;renderShop()" class="accent-[#29251F] w-4 h-4"> On sale only</label><label class="flex items-center gap-2 text-sm mt-2 cursor-pointer"><input type="checkbox" id="fNew" onchange="shopState.onlyNew=this.checked;renderShop()" class="accent-[#29251F] w-4 h-4"> New arrivals only</label></div>
+        </div>
+      </aside>
+      <div class="flex-1">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-6 bg-white border hairline px-4 py-3">
+          <span id="shopCount" class="text-sm text-stone2">0 products</span>
+          <div class="flex items-center gap-3"><label class="text-[11px] tracking-[0.18em] uppercase font-semibold text-stone2">Sort</label><select id="fSort" onchange="shopState.sort=this.value;renderShop()" class="lux-input !w-auto !py-2.5 text-sm"><option value="featured">Featured</option><option value="newest">Newest</option><option value="low">Price: Low to High</option><option value="high">Price: High to Low</option><option value="rating">Top Rated</option><option value="discount">Biggest Discount</option></select></div>
+        </div>
+        <div id="shopGrid" class="grid grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6"></div>
+        <div id="shopEmpty" class="hidden text-center py-20 bg-white border hairline"><div class="serif text-5xl opacity-20">◌</div><h3 class="serif text-2xl mt-4">No pieces found</h3><p class="text-sm text-stone2 mt-2">Try adjusting your filters or search.</p><button onclick="clearFilters()" class="btn-outline mt-6">Clear Filters</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRODUCT DETAIL ============ -->
+<section id="page-product" class="page hidden">
+  <div class="max-w-[1300px] mx-auto px-5 md:px-10 py-10">
+    <div class="text-[12px] tracking-widest uppercase text-stone2 mb-6"><a href="#" onclick="showPage('home');return false;" class="hover:text-charcoal">Home</a> / <a href="#" onclick="goShop('all');return false;" class="hover:text-charcoal">Shop</a> / <span id="pdCrumb" class="text-charcoal">Product</span></div>
+    <div class="grid md:grid-cols-2 gap-10 lg:gap-16">
+      <div><div class="relative bg-beige overflow-hidden border hairline"><img id="pdMain" src="" alt="" class="w-full aspect-[3/3.8] object-cover"><div id="pdBadge" class="absolute top-4 left-4 flex gap-2"></div><button id="pdWish" onclick="toggleWish(currentPD.id);syncPDWish()" class="wish-btn !top-4 !right-4"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21C7 16.5 3 13.2 3 9.5 3 7 5 5 7.5 5c1.7 0 3.3.9 4.5 2.6C13.2 5.9 14.8 5 16.5 5 19 5 21 7 21 9.5c0 3.7-4 7-9 11.5z"/></svg></button></div><div id="pdThumbs" class="grid grid-cols-4 gap-3 mt-3"></div></div>
+      <div>
+        <p id="pdCat" class="eyebrow text-bark"></p><h1 id="pdName" class="serif text-3xl md:text-[2.8rem] leading-tight mt-3"></h1>
+        <div class="flex items-center gap-3 mt-3"><span id="pdStars" class="text-[15px] tracking-widest"></span><span id="pdRev" class="text-sm text-stone2"></span></div>
+        <div class="flex items-baseline gap-3 mt-4"><span id="pdPrice" class="serif text-3xl"></span><span id="pdOld" class="text-stone2 line-through"></span><span id="pdOff" class="badge bg-charcoal text-cream hidden"></span></div>
+        <p id="pdStock" class="text-sm mt-3 font-medium"></p>
+        <p id="pdDesc" class="text-[14.5px] text-stone2 leading-relaxed mt-5"></p>
+        <div class="mt-6"><div class="flex justify-between items-center mb-3"><label class="lux-label !mb-0">Select Size</label><button onclick="toggleModal('sizeModal',true)" class="text-xs underline text-bark">Size Guide</button></div><div id="pdSizes" class="flex flex-wrap gap-2"></div></div>
+        <div class="mt-5"><label class="lux-label">Colour — <span id="pdColorName" class="text-charcoal"></span></label><div id="pdColors" class="flex gap-3"></div></div>
+        <div class="flex flex-wrap items-center gap-4 mt-7">
+          <div class="flex items-center border hairline bg-white"><button onclick="pdQtyChange(-1)" class="w-11 h-[52px] text-xl hover:bg-beige">−</button><span id="pdQty" class="w-10 text-center font-semibold">1</span><button onclick="pdQtyChange(1)" class="w-11 h-[52px] text-xl hover:bg-beige">+</button></div>
+          <button onclick="pdAddToCart()" class="btn-dark flex-1 min-w-[200px]">Add to Bag — <span id="pdTotalBtn"></span></button>
+        </div>
+        <button onclick="pdBuyNow()" class="w-full mt-3 border border-charcoal py-4 text-[12px] tracking-[0.2em] uppercase font-semibold hover:bg-charcoal hover:text-cream transition">Buy It Now</button>
+        <div class="grid grid-cols-3 gap-3 mt-6 text-center text-[11px] tracking-wider uppercase"><div class="border hairline bg-white p-3">Free ship<br><b>15k+</b></div><div class="border hairline bg-white p-3">14-day<br><b>Exchange</b></div><div class="border hairline bg-white p-3">COD<br><b>Available</b></div></div>
+        <div class="mt-7 border-t hairline pt-6 space-y-3 text-sm">
+          <details class="bg-white border hairline px-5 py-4"><summary class="cursor-pointer font-semibold text-[12px] tracking-[0.15em] uppercase">Fabric & Care ▾</summary><p id="pdFabric" class="text-stone2 mt-3 leading-relaxed"></p></details>
+          <details class="bg-white border hairline px-5 py-4"><summary class="cursor-pointer font-semibold text-[12px] tracking-[0.15em] uppercase">Shipping & Returns ▾</summary><p class="text-stone2 mt-3 leading-relaxed">Dispatched in 24–48 hours. Standard delivery 3–5 working days (PKR 350, free over PKR 15,000). Express 1–2 days (PKR 850). 14-day easy exchange, tags intact.</p></details>
+          <div class="text-xs text-stone2">SKU: <span id="pdSku"></span> · Category: <span id="pdCat2"></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-20"><div class="flex items-end justify-between mb-8"><h2 class="serif text-3xl md:text-4xl">You May Also <em>Love</em></h2><button onclick="goShop('all')" class="btn-outline !py-2.5">View All</button></div><div id="relatedGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"></div></div>
+  </div>
+</section>
+
+<!-- ============ COLLECTIONS ============ -->
+<section id="page-collections" class="page hidden">
+  <div class="bg-charcoal text-cream text-center py-16"><p class="eyebrow !text-champagne">Lookbook 2026</p><h1 class="serif text-4xl md:text-6xl mt-3">The <em>Collections</em></h1><p class="text-white/60 text-sm mt-3">Six edits. One philosophy — quiet luxury.</p></div>
+  <div class="max-w-[1300px] mx-auto px-5 md:px-10 py-14 grid md:grid-cols-2 gap-6" id="collectionsGrid"></div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="page-contact" class="page hidden">
+  <div class="bg-beige/50 border-b hairline"><div class="max-w-[1200px] mx-auto px-5 md:px-10 py-14"><p class="eyebrow text-bark">Client Care</p><h1 class="serif text-4xl md:text-6xl mt-3">Get in <em>Touch</em></h1></div></div>
+  <div class="max-w-[1200px] mx-auto px-5 md:px-10 py-12 grid md:grid-cols-5 gap-8">
+    <div class="md:col-span-2 space-y-4">
+      <div class="bg-white border hairline p-6"><p class="eyebrow !text-[10px]">Flagship Store</p><p class="serif text-xl mt-2">Gulberg Galleria, Lahore</p><p class="text-sm text-stone2 mt-1">24-B Main Boulevard, Gulberg III<br>Mon – Sat · 11am – 10pm</p></div>
+      <div class="bg-white border hairline p-6"><p class="eyebrow !text-[10px]">Contact</p><p class="text-sm mt-2">+92 21 3580 0000<br>care@velora.pk<br>WhatsApp: +92 300 123 4567</p></div>
+      <div class="bg-charcoal text-cream p-6"><p class="eyebrow !text-champagne !text-[10px]">Concierge Styling</p><p class="text-sm mt-2 opacity-80">Book a complimentary 1:1 styling appointment — in-store or video call.</p><button onclick="toast('Styling concierge request noted. Our team will call you shortly.')" class="btn-cream !py-3 !px-6 mt-4 w-full">Book Appointment</button></div>
+    </div>
+    <div class="md:col-span-3 bg-white border hairline p-7 md:p-10">
+      <h3 class="serif text-2xl">Send a Message</h3><p class="text-sm text-stone2 mt-1 mb-6">We reply within 24 hours on working days.</p>
+      <form onsubmit="contactSubmit(event)" class="grid sm:grid-cols-2 gap-4">
+        <div><label class="lux-label">Full Name *</label><input required class="lux-input" placeholder="Ayesha Khan"></div>
+        <div><label class="lux-label">Email *</label><input required type="email" class="lux-input" placeholder="you@email.com"></div>
+        <div><label class="lux-label">Phone</label><input class="lux-input" placeholder="03xx xxxxxxx"></div>
+        <div><label class="lux-label">Topic</label><select class="lux-input"><option>Order Enquiry</option><option>Size & Fit Help</option><option>Exchange / Return</option><option>Wholesale</option><option>Other</option></select></div>
+        <div class="sm:col-span-2"><label class="lux-label">Message *</label><textarea required rows="5" class="lux-input" placeholder="How can we help?"></textarea></div>
+        <button class="btn-dark sm:col-span-2">Send Message</button>
+      </form>
+    </div>
+  </div>
+  <div class="max-w-[1200px] mx-auto px-5 md:px-10 pb-16"><div class="bg-white border hairline divide-y"><details class="px-6 py-5"><summary class="cursor-pointer font-semibold">What is the delivery time? ▾</summary><p class="text-sm text-stone2 mt-2">Standard 3–5 working days nationwide, express 1–2 days in major cities.</p></details><details class="px-6 py-5"><summary class="cursor-pointer font-semibold">What is your exchange policy? ▾</summary><p class="text-sm text-stone2 mt-2">14-day easy size exchange, unworn with tags. Sale items exchangeable for size only.</p></details><details class="px-6 py-5"><summary class="cursor-pointer font-semibold">Do you offer Cash on Delivery? ▾</summary><p class="text-sm text-stone2 mt-2">Yes — COD is available across Pakistan at no extra charge.</p></details></div></div>
+</section>
+
+<!-- ============ CHECKOUT ============ -->
+<section id="page-checkout" class="page hidden">
+  <div class="max-w-[1200px] mx-auto px-5 md:px-10 py-12">
+    <p class="eyebrow text-bark">Secure Checkout</p><h1 class="serif text-4xl md:text-5xl mt-2">Checkout</h1>
+    <div class="bg-[#FFF8E8] border border-[#D5C2A5] px-5 py-4 mt-6 text-[13px] flex gap-3"><span class="tick shrink-0 mt-0.5">i</span><span><b>Demo checkout —</b> no real payment will be processed and no money will be charged. Orders are simulated for prototype purposes.</span></div>
+    <div class="grid lg:grid-cols-5 gap-8 mt-8">
+      <form onsubmit="placeOrder(event)" class="lg:col-span-3 space-y-6">
+        <div class="bg-white border hairline p-6 md:p-8"><h3 class="serif text-xl mb-5">01 · Contact Information</h3><div class="grid sm:grid-cols-2 gap-4"><div><label class="lux-label">Full Name *</label><input id="cName" required class="lux-input" placeholder="Ayesha Khan"></div><div><label class="lux-label">Email *</label><input id="cEmail" required type="email" class="lux-input" placeholder="you@email.com"></div><div><label class="lux-label">Phone *</label><input id="cPhone" required class="lux-input" placeholder="0300 1234567"></div><div><label class="lux-label">City *</label><select id="cCity" class="lux-input"><option>Lahore</option><option>Karachi</option><option>Islamabad</option><option>Rawalpindi</option><option>Faisalabad</option><option>Multan</option><option>Peshawar</option><option>Quetta</option><option>Other</option></select></div><div class="sm:col-span-2"><label class="lux-label">Street Address *</label><input id="cAddr" required class="lux-input" placeholder="House, street, area"></div><div class="sm:col-span-2"><label class="lux-label">Order Notes</label><textarea id="cNotes" rows="2" class="lux-input" placeholder="Delivery instructions (optional)"></textarea></div></div></div>
+        <div class="bg-white border hairline p-6 md:p-8"><h3 class="serif text-xl mb-5">02 · Shipping Method</h3><div class="space-y-3" id="shipMethods">
+          <label class="flex items-center justify-between border hairline p-4 cursor-pointer hover:border-charcoal transition"><span class="flex items-center gap-3"><input type="radio" name="ship" value="350" checked onchange="renderCheckoutSummary()" class="accent-[#29251F]"><span><b>Standard</b> <span class="text-sm text-stone2">· 3–5 working days</span></span></span><b>PKR 350</b></label>
+          <label class="flex items-center justify-between border hairline p-4 cursor-pointer hover:border-charcoal transition"><span class="flex items-center gap-3"><input type="radio" name="ship" value="850" onchange="renderCheckoutSummary()" class="accent-[#29251F]"><span><b>Express</b> <span class="text-sm text-stone2">· 1–2 working days</span></span></span><b>PKR 850</b></label>
+          <label class="flex items-center justify-between border border-dashed border-bark p-4 cursor-pointer"><span class="flex items-center gap-3"><input type="radio" name="ship" value="cod" onchange="renderCheckoutSummary()" class="accent-[#29251F]"><span><b>Cash on Delivery</b> <span class="text-sm text-stone2">· pay at door</span></span></span><b>PKR 350</b></label>
+        </div></div>
+        <div class="bg-white border hairline p-6 md:p-8"><h3 class="serif text-xl mb-1">03 · Payment <span class="text-xs font-sans font-normal text-stone2">(simulated)</span></h3><p class="text-xs text-stone2 mb-5">Select a method — this prototype does not process real payments.</p><div class="grid sm:grid-cols-3 gap-3">
+          <label class="border hairline p-4 text-center cursor-pointer has-[:checked]:border-charcoal has-[:checked]:bg-cream transition"><input type="radio" name="pay" checked class="accent-[#29251F]"> <div class="font-semibold text-sm mt-1">COD</div><div class="text-xs text-stone2">Cash on Delivery</div></label>
+          <label class="border hairline p-4 text-center cursor-pointer has-[:checked]:border-charcoal has-[:checked]:bg-cream transition"><input type="radio" name="pay" class="accent-[#29251F]"> <div class="font-semibold text-sm mt-1">Card</div><div class="text-xs text-stone2">Visa / Mastercard*</div></label>
+          <label class="border hairline p-4 text-center cursor-pointer has-[:checked]:border-charcoal has-[:checked]:bg-cream transition"><input type="radio" name="pay" class="accent-[#29251F]"> <div class="font-semibold text-sm mt-1">Transfer</div><div class="text-xs text-stone2">Bank / IBFT*</div></label>
+        </div><div class="grid sm:grid-cols-2 gap-4 mt-4 opacity-60"><input class="lux-input" placeholder="Card number 4242 •••• (demo)" disabled><input class="lux-input" placeholder="MM / YY · CVC (demo)" disabled></div></div>
+        <button class="btn-dark w-full !py-5 !text-[13px]">Place Order Securely →</button>
+        <p class="text-xs text-stone2 text-center">By placing this order you agree to our Terms & Exchange Policy.</p>
+      </form>
+      <div class="lg:col-span-2"><div class="bg-charcoal text-cream p-6 md:p-8 lg:sticky lg:top-[140px]"><h3 class="serif text-xl mb-5">Order Summary</h3><div id="checkoutItems" class="space-y-4 max-h-[320px] overflow-y-auto pr-1"></div><div class="mt-4 flex gap-2"><input id="couponInput" placeholder="Promo code (try VELORA10)" class="flex-1 bg-white/10 border border-white/20 px-4 py-3 text-sm outline-none placeholder:text-white/40"><button onclick="applyCoupon()" class="bg-champagne text-charcoal px-5 text-[12px] tracking-widest uppercase font-bold">Apply</button></div><div id="checkoutTotals" class="mt-5 pt-5 border-t border-white/15 text-sm space-y-2"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONFIRMATION ============ -->
+<section id="page-confirm" class="page hidden">
+  <div class="max-w-[760px] mx-auto px-5 py-16 text-center">
+    <div class="w-20 h-20 mx-auto rounded-full bg-charcoal text-cream flex items-center justify-center text-3xl">✓</div>
+    <p class="eyebrow text-bark mt-6">Order Confirmed</p><h1 class="serif text-4xl md:text-5xl mt-3">Thank You, <em id="cfName">Client</em>.</h1>
+    <p class="text-stone2 text-sm mt-4">Your order <b id="cfOrder" class="text-charcoal">VLR-0000</b> has been received. A confirmation has been sent to <b id="cfEmail" class="text-charcoal">email</b>.</p>
+    <div class="flex justify-center items-center gap-0 mt-10 mb-4"><div class="flex flex-col items-center"><span class="tick">✓</span><span class="text-[10px] tracking-widest uppercase mt-2 font-semibold">Placed</span></div><span class="w-14 md:w-20 h-[2px] bg-charcoal mx-2 mb-6"></span><div class="flex flex-col items-center opacity-60"><span class="w-[22px] h-[22px] rounded-full border border-charcoal flex items-center justify-center text-[11px]">2</span><span class="text-[10px] tracking-widest uppercase mt-2">Packed</span></div><span class="w-14 md:w-20 h-[2px] bg-charcoal/20 mx-2 mb-6"></span><div class="flex flex-col items-center opacity-60"><span class="w-[22px] h-[22px] rounded-full border border-charcoal flex items-center justify-center text-[11px]">3</span><span class="text-[10px] tracking-widest uppercase mt-2">Shipped</span></div><span class="w-14 md:w-20 h-[2px] bg-charcoal/20 mx-2 mb-6"></span><div class="flex flex-col items-center opacity-60"><span class="w-[22px] h-[22px] rounded-full border border-charcoal flex items-center justify-center text-[11px]">4</span><span class="text-[10px] tracking-widest uppercase mt-2">Delivered</span></div></div>
+    <div id="cfItems" class="bg-white border hairline text-left p-6 mt-8"></div>
+    <div class="flex flex-wrap justify-center gap-4 mt-8"><button onclick="goShop('all')" class="btn-dark">Continue Shopping</button><button onclick="showPage('home');toast('Order tracking link sent to your email (demo).')" class="btn-outline">Track Order</button></div>
+  </div>
+</section>
+
+<!-- ============ ADMIN ============ -->
+<section id="page-admin" class="page hidden">
+  <div id="adminLock" class="max-w-[440px] mx-auto px-5 py-20 text-center">
+    <div class="bg-white border hairline p-10"><div class="w-14 h-14 mx-auto rounded-full bg-charcoal text-cream flex items-center justify-center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="10" width="16" height="10" rx="1"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div>
+      <h2 class="serif text-3xl mt-5">Admin Access</h2><p class="text-sm text-stone2 mt-2">Restricted area. Demo passcode is <b class="text-charcoal">velora123</b>.</p>
+      <p class="text-[11px] text-stone2 mt-2 bg-beige/60 p-2 border hairline">Production note: protect admin routes with proper backend authentication, roles & sessions.</p>
+      <input id="adminPass" type="password" placeholder="Enter passcode" class="lux-input mt-5 text-center"><button onclick="adminLogin()" class="btn-dark w-full mt-3">Unlock Dashboard</button>
+      <button onclick="showPage('home')" class="text-xs underline mt-4 text-stone2">← Back to store</button>
+    </div>
+  </div>
+  <div id="adminPanel" class="hidden">
+    <div class="bg-charcoal text-cream"><div class="max-w-[1400px] mx-auto px-5 md:px-10 py-8 flex flex-wrap items-center justify-between gap-4"><div><p class="eyebrow !text-champagne">Velora Control Centre</p><h1 class="serif text-3xl md:text-4xl mt-1">Admin Dashboard</h1></div><div class="flex gap-3"><button onclick="showPage('home')" class="btn-light !py-2.5 !px-5">View Store</button><button onclick="adminLogout()" class="bg-white/10 border border-white/20 px-5 py-2.5 text-[12px] tracking-widest uppercase">Logout</button></div></div></div>
+    <div class="max-w-[1400px] mx-auto px-5 md:px-10 py-8 grid lg:grid-cols-[230px_1fr] gap-6 items-start">
+      <div class="bg-beige/40 border hairline p-2 lg:sticky lg:top-[140px] flex lg:flex-col overflow-x-auto no-scrollbar">
+        <div class="admin-tab active" onclick="adminTab('overview',this)">◈ Overview</div><div class="admin-tab" onclick="adminTab('products',this)">▦ Products</div><div class="admin-tab" onclick="adminTab('orders',this)">⧉ Orders <span id="admOrderDot" class="ml-1 text-[10px] bg-charcoal text-cream px-2 py-0.5 rounded-full"></span></div><div class="admin-tab" onclick="adminTab('customers',this)">○ Customers</div><div class="admin-tab" onclick="adminTab('inventory',this)">⬔ Inventory</div><div class="admin-tab" onclick="adminTab('analytics',this)">◐ Analytics</div>
+      </div>
+      <div class="min-w-0">
+        <div id="atab-overview" class="atab"><div id="adminStats" class="grid grid-cols-2 xl:grid-cols-4 gap-4"></div><div class="grid lg:grid-cols-5 gap-4 mt-4"><div class="lg:col-span-3 bg-white border hairline p-6"><h4 class="font-semibold text-sm tracking-widest uppercase mb-4">Revenue — Last 7 Days</h4><div class="h-[260px]"><canvas id="chRev"></canvas></div></div><div class="lg:col-span-2 bg-white border hairline p-6"><h4 class="font-semibold text-sm tracking-widest uppercase mb-4">Sales by Category</h4><div class="h-[260px] flex items-center justify-center"><canvas id="chCat"></canvas></div></div></div><div class="bg-white border hairline p-6 mt-4"><h4 class="font-semibold text-sm tracking-widest uppercase mb-4">Recent Orders</h4><div id="adminRecent" class="overflow-x-auto"></div></div></div>
+        <div id="atab-products" class="atab hidden"><div class="flex flex-wrap justify-between items-center gap-3 mb-4"><h3 class="serif text-2xl">Products (<span id="admPCount"></span>)</h3><div class="flex gap-2"><input id="admPSearch" oninput="renderAdminProducts()" placeholder="Search products..." class="lux-input !w-[200px] !py-2.5"><button onclick="openProductModal()" class="btn-dark !py-2.5 !px-5">+ Add Product</button></div></div><div class="bg-white border hairline overflow-x-auto"><table class="w-full text-sm min-w-[760px]"><thead><tr class="text-left text-[11px] tracking-widest uppercase text-stone2 border-b hairline bg-cream/60"><th class="p-4">Product</th><th class="p-4">Category</th><th class="p-4">Price</th><th class="p-4">Stock</th><th class="p-4">Sold</th><th class="p-4 text-right">Actions</th></tr></thead><tbody id="admPTbody"></tbody></table></div></div>
+        <div id="atab-orders" class="atab hidden"><h3 class="serif text-2xl mb-4">Order Management</h3><div class="bg-white border hairline overflow-x-auto"><table class="w-full text-sm min-w-[760px]"><thead><tr class="text-left text-[11px] tracking-widest uppercase text-stone2 border-b hairline bg-cream/60"><th class="p-4">Order</th><th class="p-4">Customer</th><th class="p-4">Items</th><th class="p-4">Total</th><th class="p-4">Status</th><th class="p-4">Date</th></tr></thead><tbody id="admOTbody"></tbody></table></div></div>
+        <div id="atab-customers" class="atab hidden"><h3 class="serif text-2xl mb-4">Customer Overview</h3><div class="bg-white border hairline overflow-x-auto"><table class="w-full text-sm min-w-[680px]"><thead><tr class="text-left text-[11px] tracking-widest uppercase text-stone2 border-b hairline bg-cream/60"><th class="p-4">Customer</th><th class="p-4">City</th><th class="p-4">Orders</th><th class="p-4">Spent</th><th class="p-4">Tier</th></tr></thead><tbody id="admCTbody"></tbody></table></div></div>
+        <div id="atab-inventory" class="atab hidden"><h3 class="serif text-2xl mb-4">Inventory Management</h3><div id="invList" class="space-y-3"></div></div>
+        <div id="atab-analytics" class="atab hidden"><div class="grid lg:grid-cols-2 gap-4"><div class="bg-white border hairline p-6"><h4 class="font-semibold text-sm tracking-widest uppercase mb-4">Men vs Women Revenue</h4><div class="h-[260px]"><canvas id="chGender"></canvas></div></div><div class="bg-white border hairline p-6"><h4 class="font-semibold text-sm tracking-widest uppercase mb-4">Top Products by Units Sold</h4><div id="topProducts" class="space-y-4"></div></div></div><div class="bg-charcoal text-cream p-6 mt-4 flex flex-wrap gap-6 items-center justify-between"><div><h4 class="serif text-xl">Export reports & connect your backend</h4><p class="text-sm opacity-60">Architecture ready: swap demo arrays with REST/GraphQL endpoints.</p></div><button onclick="toast('Demo report exported (CSV simulated).')" class="btn-cream !py-3">Export CSV</button></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- FOOTER -->
+<footer id="siteFooter" class="bg-charcoal text-cream mt-0">
+  <div class="max-w-[1400px] mx-auto px-5 md:px-10 pt-16 pb-8">
+    <div class="grid md:grid-cols-12 gap-10 pb-12 border-b border-white/10">
+      <div class="md:col-span-4"><div class="serif text-3xl tracking-[0.2em]">VELORA</div><p class="text-[11px] tracking-[0.35em] uppercase text-champagne mt-1">Elegance in Every Detail</p><p class="text-sm text-white/60 mt-5 leading-relaxed max-w-[320px]">Timeless menswear & womenswear — silk dresses, premium abayas, tailored suits and outerwear, hand-finished in Lahore.</p><div class="flex gap-3 mt-6"><a href="#" onclick="toast('Opening Instagram (demo link)');return false;" aria-label="Instagram" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-cream hover:text-charcoal transition"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a><a href="#" onclick="toast('Opening Facebook (demo link)');return false;" aria-label="Facebook" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-cream hover:text-charcoal transition"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h3V6h-3c-2 0-3 1.5-3 3v2H8v3h3v7h3v-7h3l1-3h-4V9.5c0-.3.2-.5.5-.5z"/></svg></a><a href="#" onclick="toast('Opening X (demo link)');return false;" aria-label="X" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-cream hover:text-charcoal transition font-bold text-sm">𝕏</a><a href="#" onclick="toast('Opening Pinterest (demo link)');return false;" aria-label="Pinterest" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-cream hover:text-charcoal transition serif italic">P</a></div></div>
+      <div class="md:col-span-2"><p class="eyebrow !text-champagne !text-[10px] mb-5">Shop</p><ul class="space-y-3 text-sm text-white/70"><li><a href="#" onclick="goShop('men');return false;" class="hover:text-cream">Men</a></li><li><a href="#" onclick="goShop('women');return false;" class="hover:text-cream">Women</a></li><li><a href="#" onclick="goShop('new');return false;" class="hover:text-cream">New Arrivals</a></li><li><a href="#" onclick="goShop('all');return false;" class="hover:text-cream">Best Sellers</a></li><li><a href="#" onclick="showPage('collections');return false;" class="hover:text-cream">Collections</a></li></ul></div>
+      <div class="md:col-span-2"><p class="eyebrow !text-champagne !text-[10px] mb-5">Care</p><ul class="space-y-3 text-sm text-white/70"><li><a href="#" onclick="showPage('contact');return false;" class="hover:text-cream">Contact Us</a></li><li><a href="#" onclick="toast('Size guide opened from product pages.');return false;" class="hover:text-cream">Size Guide</a></li><li><a href="#" onclick="toast('Shipping: 3–5 days standard, free over PKR 15,000.');return false;" class="hover:text-cream">Shipping</a></li><li><a href="#" onclick="toast('14-day easy exchange on all full-price items.');return false;" class="hover:text-cream">Exchanges</a></li><li><a href="#" onclick="showPage('admin');return false;" class="hover:text-champagne">Admin Panel</a></li></ul></div>
+      <div class="md:col-span-4"><p class="eyebrow !text-champagne !text-[10px] mb-5">Stay in the Circle</p><p class="text-sm text-white/60">Private sales & new drops, twice a month.</p><form onsubmit="subscribe(event)" class="flex mt-4"><input id="ftEmail" type="email" required placeholder="Email address" class="flex-1 bg-white/10 border border-white/20 px-4 py-3.5 text-sm outline-none placeholder:text-white/40 focus:border-champagne"><button class="bg-champagne text-charcoal px-6 text-[12px] tracking-widest uppercase font-bold">Join</button></form><div class="flex flex-wrap gap-2 mt-6"><span class="text-[10px] tracking-widest border border-white/20 px-3 py-1.5">VISA</span><span class="text-[10px] tracking-widest border border-white/20 px-3 py-1.5">MASTERCARD</span><span class="text-[10px] tracking-widest border border-white/20 px-3 py-1.5">COD</span><span class="text-[10px] tracking-widest border border-white/20 px-3 py-1.5">IBFT</span></div></div>
+    </div>
+    <div class="flex flex-col md:flex-row justify-between gap-3 pt-7 text-[12px] text-white/45"><span>© 2026 VELORA. All rights reserved. Crafted with precision in Pakistan.</span><span class="flex gap-5"><a href="#" onclick="toast('Privacy Policy (demo).');return false;" class="hover:text-cream">Privacy</a><a href="#" onclick="toast('Terms of Service (demo).');return false;" class="hover:text-cream">Terms</a><a href="#" onclick="toast('PKR pricing includes all taxes.');return false;" class="hover:text-cream">PKR · English</a></span></div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="overlay" id="overlay" onclick="closeAllDrawers()"></div>
+<aside class="drawer" id="cartDrawer" aria-label="Shopping bag">
+  <div class="flex items-center justify-between p-6 border-b hairline"><div><h3 class="serif text-2xl">Shopping Bag <span id="cartHeadCount" class="text-sm font-sans text-stone2"></span></h3><p class="text-xs text-stone2 mt-1" id="shipProgressLabel"></p></div><button onclick="closeAllDrawers()" class="w-10 h-10 border hairline rounded-full hover:bg-charcoal hover:text-cream transition">✕</button></div>
+  <div class="px-6 pt-4"><div class="h-[5px] bg-beige rounded-full overflow-hidden"><div id="shipBar" class="h-full bg-charcoal transition-all duration-700" style="width:0%"></div></div></div>
+  <div id="cartItems" class="flex-1 overflow-y-auto p-6 space-y-5"></div>
+  <div class="p-6 border-t hairline bg-white"><div class="flex justify-between text-sm mb-1"><span class="text-stone2">Subtotal</span><b id="cartSub">PKR 0</b></div><div class="flex justify-between text-sm mb-3"><span class="text-stone2">Shipping</span><span id="cartShip" class="text-sm">—</span></div><div class="flex justify-between serif text-xl pt-3 border-t hairline"><span>Total</span><span id="cartTotal">PKR 0</span></div><button onclick="closeAllDrawers();showPage('checkout')" class="btn-dark w-full mt-4">Proceed to Checkout →</button><button onclick="closeAllDrawers();goShop('all')" class="w-full text-center text-xs underline mt-3 text-stone2">Continue shopping</button></div>
+</aside>
+
+<!-- WISHLIST DRAWER -->
+<aside class="drawer" id="wishDrawer" aria-label="Wishlist">
+  <div class="flex items-center justify-between p-6 border-b hairline"><h3 class="serif text-2xl">Wishlist</h3><button onclick="closeAllDrawers()" class="w-10 h-10 border hairline rounded-full hover:bg-charcoal hover:text-cream transition">✕</button></div>
+  <div id="wishItems" class="flex-1 overflow-y-auto p-6 space-y-5"></div>
+  <div class="p-6 border-t hairline bg-white"><button onclick="closeAllDrawers();goShop('all')" class="btn-outline w-full">Discover More</button></div>
+</aside>
+
+<!-- QUICK ADD MODAL -->
+<div class="modal-wrap" id="quickModal"><div class="absolute inset-0 bg-charcoal/50" onclick="toggleModal('quickModal',false)"></div><div class="modal-box relative bg-cream w-full max-w-[860px] grid md:grid-cols-2 overflow-hidden max-h-[92vh] overflow-y-auto">
+  <div class="relative min-h-[300px]"><img id="qImg" src="" class="absolute inset-0 w-full h-full object-cover" alt=""><div id="qBadge" class="absolute top-4 left-4"></div></div>
+  <div class="p-7 md:p-9"><button onclick="toggleModal('quickModal',false)" class="absolute top-4 right-4 w-10 h-10 bg-white rounded-full shadow">✕</button><p id="qCat" class="eyebrow text-bark"></p><h3 id="qName" class="serif text-2xl md:text-3xl mt-2"></h3><div id="qPrice" class="serif text-xl mt-2"></div><div class="mt-5"><label class="lux-label">Select Size *</label><div id="qSizes" class="flex flex-wrap gap-2"></div></div><div class="mt-4"><label class="lux-label">Colour</label><div id="qColors" class="flex gap-2"></div></div><div class="flex gap-3 mt-6"><button onclick="confirmQuickAdd()" class="btn-dark flex-1">Add to Bag</button><button id="qView" class="btn-outline">Details</button></div><p class="text-xs text-stone2 mt-4">Free shipping over PKR 15,000 · 14-day exchange · COD available</p></div>
+</div></div>
+
+<!-- SIZE GUIDE -->
+<div class="modal-wrap" id="sizeModal"><div class="absolute inset-0 bg-charcoal/50" onclick="toggleModal('sizeModal',false)"></div><div class="modal-box relative bg-white w-full max-w-[560px] p-8"><button onclick="toggleModal('sizeModal',false)" class="absolute top-4 right-4 w-10 h-10 border hairline rounded-full">✕</button><h3 class="serif text-2xl">Size Guide</h3><p class="text-sm text-stone2 mt-1">Measured in inches. When between sizes, we recommend sizing up for VELORA's tailored fit.</p><table class="w-full text-sm mt-5 border hairline"><thead><tr class="bg-cream text-[11px] tracking-widest uppercase"><th class="p-3 border hairline">Size</th><th class="p-3 border hairline">Chest</th><th class="p-3 border hairline">Waist</th><th class="p-3 border hairline">Hip</th></tr></thead><tbody class="text-center"><tr><td class="p-3 border hairline font-semibold">XS</td><td class="p-3 border hairline">32–34</td><td class="p-3 border hairline">25–27</td><td class="p-3 border hairline">34–36</td></tr><tr><td class="p-3 border hairline font-semibold">S</td><td class="p-3 border hairline">34–36</td><td class="p-3 border hairline">27–29</td><td class="p-3 border hairline">36–38</td></tr><tr><td class="p-3 border hairline font-semibold">M</td><td class="p-3 border hairline">36–38</td><td class="p-3 border hairline">29–31</td><td class="p-3 border hairline">38–40</td></tr><tr class="bg-cream/60"><td class="p-3 border hairline font-semibold">L</td><td class="p-3 border hairline">38–40</td><td class="p-3 border hairline">31–33</td><td class="p-3 border hairline">40–42</td></tr><tr><td class="p-3 border hairline font-semibold">XL</td><td class="p-3 border hairline">40–43</td><td class="p-3 border hairline">33–36</td><td class="p-3 border hairline">42–45</td></tr></tbody></table></div></div>
+
+<!-- PRODUCT ADMIN MODAL -->
+<div class="modal-wrap" id="prodModal"><div class="absolute inset-0 bg-charcoal/50" onclick="toggleModal('prodModal',false)"></div><div class="modal-box relative bg-white w-full max-w-[620px] p-8 max-h-[92vh] overflow-y-auto"><button onclick="toggleModal('prodModal',false)" class="absolute top-4 right-4 w-10 h-10 border hairline rounded-full">✕</button><h3 class="serif text-2xl" id="pmTitle">Add Product</h3><div class="grid sm:grid-cols-2 gap-4 mt-6"><div class="sm:col-span-2"><label class="lux-label">Product Name *</label><input id="pmName" class="lux-input"></div><div><label class="lux-label">Gender *</label><select id="pmGender" class="lux-input"><option value="women">Women</option><option value="men">Men</option></select></div><div><label class="lux-label">Category *</label><select id="pmCat" class="lux-input"><option>Dresses</option><option>Tops</option><option>Trousers</option><option>Abayas</option><option>Outerwear</option><option>Accessories</option><option>Shirts</option><option>T-shirts</option><option>Jeans</option><option>Jackets</option></select></div><div><label class="lux-label">Price (PKR) *</label><input id="pmPrice" type="number" class="lux-input"></div><div><label class="lux-label">Old Price (optional)</label><input id="pmOld" type="number" class="lux-input"></div><div><label class="lux-label">Stock *</label><input id="pmStock" type="number" class="lux-input"></div><div><label class="lux-label">Badge</label><select id="pmBadge" class="lux-input"><option value="">None</option><option>New</option><option>Bestseller</option><option>Limited</option><option>Sale</option></select></div><div class="sm:col-span-2"><label class="lux-label">Sizes (comma separated)</label><input id="pmSizes" class="lux-input" placeholder="XS, S, M, L, XL"></div><div class="sm:col-span-2"><label class="lux-label">Image URL</label><input id="pmImg" class="lux-input" placeholder="https://..."></div><div class="sm:col-span-2"><label class="lux-label">Description</label><textarea id="pmDesc" rows="3" class="lux-input"></textarea></div></div><button onclick="saveProduct()" class="btn-dark w-full mt-6">Save Product</button></div></div>
+
+<div id="toasts"></div>
+<button id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="fixed bottom-6 right-6 z-[60] w-11 h-11 rounded-full bg-charcoal text-cream shadow-xl hidden items-center justify-center">↑</button>
+
+<script>
+/* ================= DATA ================= */
+const U = id => `https://images.unsplash.com/${id}?q=80&w=800&auto=format&fit=crop`;
+let PRODUCTS = [
+ {id:'m1', name:'Sculpted White Oxford Shirt', gender:'men', category:'Shirts', price:8950, oldPrice:10950, sizes:['S','M','L','XL'], colors:[{n:'White',h:'#FFFFFF'},{n:'Sky',h:'#C9D8E3'}], images:[U('photo-1596755094514-f87e34085b2c'),U('photo-1602810318383-e386cc2a3ccf')], rating:4.8, reviews:214, badge:'Sale', stock:24, sold:640, added:9, sku:'VM-MSH-01', fabric:'100% Supima cotton oxford, mother-of-pearl buttons. Machine wash cold.', desc:'Our signature oxford — precision-cut collar, single-needle stitching and a sculpted tapered body that moves from boardroom to dinner effortlessly.'},
+ {id:'m2', name:'Sage Linen Resort Shirt', gender:'men', category:'Shirts', price:9750, oldPrice:null, sizes:['S','M','L','XL'], colors:[{n:'Sage',h:'#9CAF88'},{n:'Sand',h:'#D5C2A5'}], images:[U('photo-1607345366928-199ea26cfe3e'),U('photo-1596755094514-f87e34085b2c')], rating:4.7, reviews:98, badge:'New', stock:18, sold:210, added:10, sku:'VM-MSH-02', fabric:'European flax linen, garment-washed. Hand wash recommended.', desc:'Airy sage linen with camp collar and corozo buttons — the definitive summer shirt for coastal evenings.'},
+ {id:'m3', name:'Essential Ivory Pima Tee', gender:'men', category:'T-shirts', price:3950, oldPrice:null, sizes:['S','M','L','XL'], colors:[{n:'Ivory',h:'#F5F0E6'},{n:'Charcoal',h:'#29251F'}], images:[U('photo-1521572163474-6864f9cf17ab'),U('photo-1583743814966-8936f5b7be1a')], rating:4.9, reviews:512, badge:'Bestseller', stock:60, sold:1240, added:5, sku:'VM-MTE-01', fabric:'220 GSM Peruvian Pima cotton, pre-shrunk.', desc:'The perfect tee, perfected. Dense yet breathable Pima jersey with reinforced collar that keeps its shape wear after wear.'},
+ {id:'m4', name:'Noir Heavyweight Tee', gender:'men', category:'T-shirts', price:4250, oldPrice:4950, sizes:['S','M','L','XL'], colors:[{n:'Black',h:'#111111'}], images:[U('photo-1583743814966-8936f5b7be1a'),U('photo-1521572163474-6864f9cf17ab')], rating:4.6, reviews:187, badge:'Sale', stock:42, sold:880, added:6, sku:'VM-MTE-02', fabric:'Heavyweight 240 GSM cotton, bio-washed.', desc:'A boxy, heavyweight black tee with dropped shoulders — minimal, masculine, endlessly wearable.'},
+ {id:'m5', name:'Tailored Charcoal Wool Trouser', gender:'men', category:'Trousers', price:12950, oldPrice:null, sizes:['30','32','34','36'], colors:[{n:'Charcoal',h:'#3A3630'},{n:'Navy',h:'#1F2A44'}], images:[U('photo-1594938298603-c8148c4dae35'),U('photo-1473966968600-fa801b869a1a')], rating:4.8, reviews:143, badge:'Limited', stock:15, sold:390, added:8, sku:'VM-MTR-01', fabric:'Italian wool-blend twill, half-canvas waistband.', desc:'Half-lined tailored trouser with extended tab closure and hand-finished hems. Sharp without stiffness.'},
+ {id:'m6', name:'Sand Pleated Chino', gender:'men', category:'Trousers', price:8950, oldPrice:null, sizes:['30','32','34','36'], colors:[{n:'Sand',h:'#D5C2A5'}], images:[U('photo-1473966968600-fa801b869a1a'),U('photo-1594938298603-c8148c4dae35')], rating:4.5, reviews:76, badge:'New', stock:28, sold:160, added:10, sku:'VM-MTR-02', fabric:'Peached cotton-twill with 2% elastane.', desc:'Double-pleated chino in warm sand — relaxed through the leg, tapered at the ankle. Pairs with everything.'},
+ {id:'m7', name:'Selvedge Indigo Jean', gender:'men', category:'Jeans', price:11950, oldPrice:null, sizes:['30','32','34','36'], colors:[{n:'Indigo',h:'#2C3E62'}], images:[U('photo-1542272604-787c3835535d'),U('photo-1541099649105-f69ad21f3246')], rating:4.9, reviews:301, badge:'Bestseller', stock:33, sold:970, added:4, sku:'VM-MJN-01', fabric:'14oz Japanese selvedge denim, chainstitched.', desc:'Cut from rigid Japanese selvedge that fades beautifully. Slim-straight leg, copper rivets, leather patch.'},
+ {id:'m8', name:'Stone-Washed Slim Jean', gender:'men', category:'Jeans', price:9950, oldPrice:11950, sizes:['30','32','34','36'], colors:[{n:'Stone',h:'#8A9BA8'}], images:[U('photo-1541099649105-f69ad21f3246'),U('photo-1542272604-787c3835535d')], rating:4.6, reviews:129, badge:'Sale', stock:21, sold:540, added:7, sku:'VM-MJN-02', fabric:'Comfort-stretch denim, stone wash.', desc:'A lived-in stone wash with just the right stretch — slim but never tight, soft from day one.'},
+ {id:'m9', name:'Milano Leather Biker Jacket', gender:'men', category:'Jackets', price:34950, oldPrice:39950, sizes:['M','L','XL'], colors:[{n:'Cognac',h:'#8B5A2B'},{n:'Black',h:'#111'}], images:[U('photo-1551028719-00167b16eac5'),U('photo-1591047139829-d91aecb6caea')], rating:4.9, reviews:88, badge:'Limited', stock:7, sold:180, added:9, sku:'VM-MJK-01', fabric:'Full-grain aniline leather, quilted lining.', desc:'Cut from full-grain leather that ages like art. Asymmetric zip, sculpted shoulders, satin lining.'},
+ {id:'m10', name:'Camel Wool Overcoat', gender:'men', category:'Jackets', price:28950, oldPrice:null, sizes:['M','L','XL'], colors:[{n:'Camel',h:'#C19A6B'}], images:[U('photo-1591047139829-d91aecb6caea'),U('photo-1551028719-00167b16eac5')], rating:4.8, reviews:112, badge:'New', stock:11, sold:240, added:10, sku:'VM-MJK-02', fabric:'Double-faced Italian wool, horn buttons.', desc:'A sweeping camel overcoat with hand-set lapels — the single most elegant layer a man can own.'},
+ {id:'m11', name:'Heritage Chrono Watch — Tan', gender:'men', category:'Accessories', price:18950, oldPrice:null, sizes:['One Size'], colors:[{n:'Tan',h:'#B07D4F'}], images:[U('photo-1524805444758-089113d48a6d'),U('photo-1627123424574-724758594e93')], rating:4.7, reviews:64, badge:'', stock:19, sold:150, added:3, sku:'VM-MAC-01', fabric:'Sapphire glass, Italian leather strap, 5ATM.', desc:'A 40mm brushed-steel chronograph on vegetable-tanned leather. Quietly luxurious on the wrist.'},
+ {id:'m12', name:'Italian Leather Belt + Card Wallet', gender:'men', category:'Accessories', price:7950, oldPrice:9500, sizes:['32','34','36'], colors:[{n:'Espresso',h:'#4B3621'}], images:[U('photo-1627123424574-724758594e93'),U('photo-1572635196237-14b3f281503f')], rating:4.6, reviews:91, badge:'Sale', stock:35, sold:420, added:2, sku:'VM-MAC-02', fabric:'Full-grain Tuscan leather gift set.', desc:'A gift-ready set: hand-burnished belt and six-slot card wallet in deep espresso leather.'},
+ {id:'w1', name:'Champagne Silk Slip Dress', gender:'women', category:'Dresses', price:21950, oldPrice:25950, sizes:['XS','S','M','L'], colors:[{n:'Champagne',h:'#E7D3B3'},{n:'Noir',h:'#1A1A1A'}], images:[U('photo-1595777457583-95e059d581b8'),U('photo-1515372039744-b8f02a3ae446')], rating:4.9, reviews:326, badge:'Bestseller', stock:14, sold:890, added:9, sku:'VW-DRS-01', fabric:'22-momme mulberry silk, bias cut.', desc:'Liquid champagne silk cut on the bias to pour over the body. Adjustable straps, midi length, unforgettable movement.'},
+ {id:'w2', name:'Ivory Meadow Wrap Midi', gender:'women', category:'Dresses', price:16950, oldPrice:null, sizes:['XS','S','M','L','XL'], colors:[{n:'Ivory Floral',h:'#F3EDE0'}], images:[U('photo-1572804013309-59a88b7e92f1'),U('photo-1595777457583-95e059d581b8')], rating:4.7, reviews:158, badge:'New', stock:22, sold:310, added:10, sku:'VW-DRS-02', fabric:'Silk-blend crepe, blouson sleeves.', desc:'A romantic wrap midi with blouson sleeves and a twirl-worthy skirt — made for daytime soirées.'},
+ {id:'w3', name:'Scarlet Silk Evening Gown', gender:'women', category:'Dresses', price:32950, oldPrice:null, sizes:['XS','S','M','L'], colors:[{n:'Scarlet',h:'#9B1B30'}], images:[U('photo-1566174053879-31528523f8ae'),U('photo-1515372039744-b8f02a3ae446')], rating:5.0, reviews:74, badge:'Limited', stock:6, sold:120, added:10, sku:'VW-DRS-03', fabric:'Silk satin with draped cowl back.', desc:'Floor-sweeping scarlet satin with a draped open back. Made for entrances. Limited to 60 pieces.'},
+ {id:'w4', name:'Cloud Cashmere Knit Top', gender:'women', category:'Tops', price:12950, oldPrice:null, sizes:['XS','S','M','L'], colors:[{n:'Oat',h:'#E9DFD0'},{n:'Rose',h:'#D9AFA6'}], images:[U('photo-1434389677669-e08b4cac3105'),U('photo-1503342217505-b0a15ec3261c')], rating:4.8, reviews:203, badge:'Bestseller', stock:26, sold:720, added:5, sku:'VW-TOP-01', fabric:'100% Mongolian cashmere, 7-gauge.', desc:'Feather-soft cashmere with a relaxed neckline — the knit you will reach for daily, for years.'},
+ {id:'w5', name:'White Poplin Sculpt Blouse', gender:'women', category:'Tops', price:8950, oldPrice:10500, sizes:['XS','S','M','L','XL'], colors:[{n:'White',h:'#FFFFFF'}], images:[U('photo-1551163943-3f6a855d1153'),U('photo-1434389677669-e08b4cac3105')], rating:4.6, reviews:117, badge:'Sale', stock:31, sold:480, added:6, sku:'VW-TOP-02', fabric:'Compact cotton poplin, balloon cuff.', desc:'Crisp white poplin with sculptural cuffs and a clean, tucked-or-untucked silhouette.'},
+ {id:'w6', name:'Ivory Wide-Leg Tailored Trouser', gender:'women', category:'Trousers', price:11950, oldPrice:null, sizes:['XS','S','M','L'], colors:[{n:'Ivory',h:'#F5F0E6'}], images:[U('photo-1594633312681-425c7b97ccd1'),U('photo-1509631179647-0177331693ae')], rating:4.7, reviews:142, badge:'New', stock:20, sold:290, added:9, sku:'VW-TR-01', fabric:'Wool-blend crepe, pressed pleat.', desc:'High-rise, wide-leg trouser that elongates the leg — pressed pleats, invisible closure, total polish.'},
+ {id:'w7', name:'Sand Linen Palazzo Set', gender:'women', category:'Trousers', price:14950, oldPrice:null, sizes:['XS','S','M','L','XL'], colors:[{n:'Sand',h:'#D5C2A5'}], images:[U('photo-1509631179647-0177331693ae'),U('photo-1594633312681-425c7b97ccd1')], rating:4.8, reviews:189, badge:'Bestseller', stock:17, sold:650, added:8, sku:'VW-TR-02', fabric:'Washed European linen palazzo + top.', desc:'A breezy sand linen co-ord with flowing palazzos — resort dressing at its most refined.'},
+ {id:'w8', name:'Noir Premium Crepe Abaya', gender:'women', category:'Abayas', price:18950, oldPrice:21950, sizes:['S','M','L','XL'], colors:[{n:'Noir',h:'#1A1A1A'}], images:[U('photo-1581044777550-4cfa60707c03'),U('photo-1610030469983-98e550d6193c')], rating:4.9, reviews:412, badge:'Bestseller', stock:25, sold:1150, added:7, sku:'VW-ABY-01', fabric:'Korean Nida crepe, hand-rolled hems.', desc:'Our iconic noir abaya — fluid Korean crepe, hidden snap placket, tailored sleeves. Modesty, perfected.'},
+ {id:'w9', name:'Sand Embroidered Luxury Abaya', gender:'women', category:'Abayas', price:24950, oldPrice:null, sizes:['S','M','L'], colors:[{n:'Sand',h:'#D5C2A5'}], images:[U('photo-1610030469983-98e550d6193c'),U('photo-1581044777550-4cfa60707c03')], rating:4.9, reviews:96, badge:'New', stock:9, sold:180, added:10, sku:'VW-ABY-02', fabric:'Crepe with tonal hand embroidery + hijab.', desc:'Sand crepe with tonal cuff embroidery, includes matching chiffon hijab. For Eid and beyond.'},
+ {id:'w10', name:'Double-Faced Camel Wool Coat', gender:'women', category:'Outerwear', price:31950, oldPrice:36950, sizes:['XS','S','M','L'], colors:[{n:'Camel',h:'#C19A6B'}], images:[U('photo-1539533018447-63fcce2678e3'),U('photo-1544022613-e87ca75a784a')], rating:4.9, reviews:234, badge:'Sale', stock:10, sold:540, added:8, sku:'VW-OUT-01', fabric:'Double-faced Loro-grade wool, hand seams.', desc:'Unlined, hand-finished double-faced wool coat — weightless warmth with a sculpted wrap silhouette.'},
+ {id:'w11', name:'Stone Cropped Trench', gender:'women', category:'Outerwear', price:22950, oldPrice:null, sizes:['XS','S','M','L'], colors:[{n:'Stone',h:'#CFC6B8'}], images:[U('photo-1544022613-e87ca75a784a'),U('photo-1539533018447-63fcce2678e3')], rating:4.7, reviews:108, badge:'New', stock:16, sold:220, added:10, sku:'VW-OUT-02', fabric:'Bonded cotton gabardine, water-resistant.', desc:'A modern cropped trench in stone gabardine — horn buckles, storm flap, endless styling options.'},
+ {id:'w12', name:'Quilted Noir Puffer — Cropped', gender:'women', category:'Outerwear', price:19950, oldPrice:null, sizes:['XS','S','M','L'], colors:[{n:'Noir',h:'#1A1A1A'}], images:[U('photo-1547949003-9792a18a2601'),U('photo-1539533018447-63fcce2678e3')], rating:4.6, reviews:83, badge:'New', stock:23, sold:140, added:10, sku:'VW-OUT-03', fabric:'Recycled down-fill, matte shell.', desc:'A cropped, matte puffer with hidden closures — warm minimalism for winter city days.'},
+ {id:'w13', name:'Vela Structured Leather Tote', gender:'women', category:'Accessories', price:24950, oldPrice:null, sizes:['One Size'], colors:[{n:'Cognac',h:'#8B5A2B'},{n:'Black',h:'#111'}], images:[U('photo-1584917865442-de89df76afd3'),U('photo-1591561954557-26941169b49e')], rating:4.8, reviews:176, badge:'Bestseller', stock:13, sold:610, added:4, sku:'VW-ACC-01', fabric:'Saffiano leather, suede lining.', desc:'Architectural saffiano tote that fits a 13" laptop — suede interior, magnetic closure, detachable pouch.'},
+ {id:'w14', name:'Gilded Silk Scarf + Hoops Set', gender:'women', category:'Accessories', price:6950, oldPrice:8500, sizes:['One Size'], colors:[{n:'Gold/Champagne',h:'#D5C2A5'}], images:[U('photo-1583744946564-b52ac1c389c8'),U('photo-1611591437281-460bfbe1220a')], rating:4.7, reviews:149, badge:'Sale', stock:40, sold:530, added:3, sku:'VW-ACC-02', fabric:'Mulberry silk twill + 18k gold vermeil hoops.', desc:'Hand-rolled silk scarf in our archive print, paired with everyday gold vermeil hoops. Gift-boxed.'},
+];
+const COLLECTIONS = [
+ {name:'The Modern Muse', tag:'Women · 12 Styles', img:U('photo-1487412720507-e7ab37603c6f'), desc:'Slip dresses, tailoring and soft knits.', act:()=>goShop('women')},
+ {name:'Tailored Precision', tag:'Men · 10 Styles', img:U('photo-1617137968427-85924c800a22'), desc:'Oxfords, selvedge and overcoats.', act:()=>goShop('men')},
+ {name:'The Modest Edit', tag:'Abayas · 6 Styles', img:U('photo-1591369822096-ffd140ec948f'), desc:'Premium crepe abayas + hijabs.', act:()=>goShop('women','Abayas')},
+ {name:'Evening & Occasion', tag:'Festive · Up to 30% Off', img:U('photo-1515372039744-b8f02a3ae446'), desc:'Gowns, silk and celebration wear.', act:()=>goShop('women','Dresses')},
+ {name:'Outerwear Atelier', tag:'Coats & Jackets', img:U('photo-1539533018447-63fcce2678e3'), desc:'Wool coats, trenches, leather.', act:()=>goShop('all','Outerwear')},
+ {name:'Finishing Touches', tag:'Accessories', img:U('photo-1445205170230-053b83016050'), desc:'Totes, scarves, watches & more.', act:()=>goShop('all','Accessories')},
+];
+let demoOrders = [
+ {id:'VLR-8421', name:'Mahnoor Fatima', email:'mahnoor@gmail.com', city:'Lahore', items:2, total:31900, status:'Delivered', date:'2026-11-04'},
+ {id:'VLR-8420', name:'Daniyal Ahmed', email:'daniyal.a@hotmail.com', city:'Karachi', items:1, total:12950, status:'Shipped', date:'2026-11-06'},
+ {id:'VLR-8419', name:'Sara Malik', email:'sara.malik@yahoo.com', city:'Islamabad', items:3, total:54250, status:'Processing', date:'2026-11-08'},
+ {id:'VLR-8418', name:'Hassan Raza', email:'hassan.r@gmail.com', city:'Faisalabad', items:1, total:18950, status:'Processing', date:'2026-11-09'},
+];
+let customers = [
+ {name:'Mahnoor Fatima', email:'mahnoor@gmail.com', city:'Lahore', orders:6, spent:142300, tier:'Gold'},
+ {name:'Ayesha Khan', email:'ayesha.k@gmail.com', city:'Karachi', orders:4, spent:88700, tier:'Silver'},
+ {name:'Daniyal Ahmed', email:'daniyal.a@hotmail.com', city:'Karachi', orders:3, spent:45200, tier:'Silver'},
+ {name:'Sara Malik', email:'sara.malik@yahoo.com', city:'Islamabad', orders:5, spent:121500, tier:'Gold'},
+ {name:'Hassan Raza', email:'hassan.r@gmail.com', city:'Faisalabad', orders:2, spent:31900, tier:'Bronze'},
+ {name:'Zara Sheikh', email:'zara.s@gmail.com', city:'Lahore', orders:1, spent:21950, tier:'Bronze'},
+];
+const TESTIS = [
+ {q:'The noir abaya drapes like nothing I have owned — the crepe, the stitching, even the packaging felt couture. VELORA is now my default for Eid.', n:'Mahnoor Fatima', c:'Lahore · Verified Buyer', img:'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop'},
+ {q:'Ordered the camel overcoat for my husband. The wool, the cut, the hand-finished lapels — it rivals brands three times the price. Delivery to Karachi in two days.', n:'Ayesha Khan', c:'Karachi · Verified Buyer', img:'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format&fit=crop'},
+ {q:'Impeccable tailoring. The selvedge jeans fit perfectly and the exchange for a different waist size was effortless. True luxury service.', n:'Daniyal Ahmed', c:'Islamabad · Verified Buyer', img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop'},
+];
+
+/* ================= STATE ================= */
+let cart = JSON.parse(localStorage.getItem('velora_cart')||'[]');
+let wishlist = new Set(JSON.parse(localStorage.getItem('velora_wish')||'[]'));
+let coupon = null;
+let shopState = {gender:'all', category:'All', sort:'featured', maxPrice:50000, size:'All', search:'', onlySale:false, onlyNew:false};
+let currentPD=null, pdSize=null, pdColor=null, pdQty=1;
+let quickId=null, qSize=null, qColor=null;
+let editingId=null, adminAuthed=false, charts={};
+const PKR = n => 'PKR ' + Math.round(n).toLocaleString('en-US');
+const byId = id => PRODUCTS.find(p=>p.id===id);
+const discount = p => p.oldPrice ? Math.round((1-p.price/p.oldPrice)*100) : 0;
+
+/* ================= NAV / PAGES ================= */
+function showPage(name){
+  document.querySelectorAll('.page').forEach(s=>s.classList.add('hidden'));
+  document.getElementById('page-'+name).classList.remove('hidden');
+  document.querySelectorAll('[data-nav]').forEach(a=>a.classList.remove('active'));
+  document.getElementById('siteFooter').style.display = (name==='admin') ? 'none':'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+  toggleMobile(false); closeAllDrawers();
+  if(name==='checkout') renderCheckoutSummary();
+  if(name==='collections') renderCollections();
+  if(name==='admin') renderAdminGate();
+  requestAnimationFrame(observeReveals);
+}
+function goShop(gender, cat){
+  shopState.gender = gender||'all'; shopState.category = cat||'All';
+  shopState.search=''; shopState.onlySale=false; shopState.onlyNew=false; shopState.maxPrice=50000; shopState.size='All'; shopState.sort='featured';
+  const t={men:['Men','Tailored shirts, denims, overcoats & essentials.'],women:['Women','Dresses, abayas, tailoring & outerwear.'],new:['New Arrivals','The latest drops — limited pieces per size.'],all:['Shop All','Every VELORA piece across men & women.']}[shopState.gender]||['Shop All',''];
+  document.getElementById('shopTitle').textContent=t[0]; document.getElementById('shopSub').textContent=t[1];
+  document.getElementById('shopCrumb').textContent=t[0]+(cat?' · '+cat:'');
+  document.getElementById('shopEyebrow').textContent = gender==='men'?'Menswear':gender==='women'?'Womenswear':gender==='new'?'Just Landed':'The Catalogue';
+  const fS=document.getElementById('fSearch'); if(fS) fS.value=''; const fP=document.getElementById('fPrice'); if(fP){fP.value=50000; document.getElementById('priceLabel').textContent='PKR 50,000';}
+  const fs=document.getElementById('fSale'); if(fs) fs.checked=false; const fn=document.getElementById('fNew'); if(fn) fn.checked=false;
+  const fso=document.getElementById('fSort'); if(fso) fso.value='featured';
+  showPage('shop'); renderShop();
+  document.querySelectorAll('[data-nav]').forEach(a=>{ if(a.dataset.nav===gender) a.classList.add('active'); });
+}
+function clearFilters(){ shopState={gender:shopState.gender, category:'All', sort:'featured', maxPrice:50000, size:'All', search:'', onlySale:false, onlyNew:false}; document.getElementById('fSearch').value=''; document.getElementById('fPrice').value=50000; document.getElementById('priceLabel').textContent='PKR 50,000'; document.getElementById('fSale').checked=false; document.getElementById('fNew').checked=false; document.getElementById('fSort').value='featured'; renderShop(); }
+function toggleMobile(open){ document.getElementById('mobilePanel').style.transform = open?'none':''; document.getElementById('mobileBg').style.opacity = open?'1':'0'; document.getElementById('mobileMenu').style.pointerEvents = open?'auto':'none'; }
+
+/* ================= PRODUCT CARDS ================= */
+function stars(r){ let s=''; for(let i=1;i<=5;i++) s+= i<=Math.round(r)?'★':'☆'; return `<span class="text-[#C9A24B]">${s}</span>`; }
+function cardHTML(p, rank){
+  const off=discount(p), wished=wishlist.has(p.id);
+  return `<div class="p-card reveal in">
+    <div class="p-media cursor-pointer" onclick="openProduct('${p.id}')">
+      <img loading="lazy" src="${p.images[0]}" alt="${p.name}" class="img-a"><img loading="lazy" src="${p.images[1]||p.images[0]}" alt="" class="img-b">
+      <div class="absolute top-3 left-3 flex flex-col gap-2">${p.badge?`<span class="badge ${p.badge==='Sale'?'bg-[#8B3A2E] text-white':p.badge==='New'?'bg-white text-charcoal border hairline':'bg-charcoal text-cream'}">${p.badge}</span>`:''}${off?`<span class="badge bg-champagne text-charcoal">−${off}%</span>`:''}${rank?`<span class="badge bg-charcoal text-champagne">#${rank} Bestseller</span>`:''}</div>
+      <button onclick="event.stopPropagation();toggleWish('${p.id}')" aria-label="Wishlist" class="wish-btn ${wished?'active':''}"><svg width="16" height="16" viewBox="0 0 24 24" fill="${wished?'currentColor':'none'}" stroke="currentColor" stroke-width="1.7"><path d="M12 21C7 16.5 3 13.2 3 9.5 3 7 5 5 7.5 5c1.7 0 3.3.9 4.5 2.6C13.2 5.9 14.8 5 16.5 5 19 5 21 7 21 9.5c0 3.7-4 7-9 11.5z"/></svg></button>
+      ${p.stock<=8?`<span class="absolute bottom-3 left-3 badge bg-white/95 text-[#8B3A2E]">Only ${p.stock} left</span>`:''}
+      <div class="p-actions"><button onclick="event.stopPropagation();quickAdd('${p.id}')" class="flex-1 bg-charcoal text-cream text-[11px] tracking-[0.18em] uppercase font-semibold py-3.5 hover:bg-black transition">Quick Add +</button><button onclick="event.stopPropagation();openProduct('${p.id}')" class="w-[52px] bg-white text-charcoal flex items-center justify-center hover:bg-champagne transition" aria-label="View">→</button></div>
+    </div>
+    <div class="p-4 md:p-5 cursor-pointer" onclick="openProduct('${p.id}')">
+      <p class="text-[10.5px] tracking-[0.22em] uppercase text-stone2">${p.gender==='men'?"Men":"Women"} · ${p.category}</p>
+      <h3 class="serif text-[16px] md:text-[17px] leading-snug mt-1.5 line-clamp-2">${p.name}</h3>
+      <div class="flex items-center gap-1.5 mt-1.5 text-xs">${stars(p.rating)}<span class="text-stone2">(${p.reviews})</span></div>
+      <div class="flex items-baseline gap-2 mt-2"><span class="font-semibold text-[15px]">${PKR(p.price)}</span>${p.oldPrice?`<span class="text-[13px] text-stone2 line-through">${PKR(p.oldPrice)}</span>`:''}</div>
+      <div class="flex items-center justify-between mt-3"><div class="flex gap-1.5">${p.colors.slice(0,4).map(c=>`<span class="color-dot" style="background:${c.h}"></span>`).join('')}</div><span class="text-[11px] text-stone2">${p.sizes.slice(0,4).join(' · ')}</span></div>
+    </div></div>`;
+}
+
+/* ================= HOME RENDER ================= */
+let newTab='all';
+function setNewTab(t,el){ newTab=t; document.querySelectorAll('[data-ntab]').forEach(b=>b.classList.remove('active')); el.classList.add('active'); renderNew(); }
+function renderNew(){
+  let list=[...PRODUCTS].sort((a,b)=>b.added-a.added);
+  if(newTab!=='all') list=list.filter(p=>p.gender===newTab);
+  document.getElementById('newGrid').innerHTML = list.slice(0,8).map(p=>cardHTML(p)).join('');
+}
+function renderBest(){
+  const list=[...PRODUCTS].sort((a,b)=>b.sold-a.sold).slice(0,8);
+  document.getElementById('bestTrack').innerHTML = list.map((p,i)=>`<div class="min-w-[240px] md:min-w-[300px] snap-start">${cardHTML(p,i+1)}</div>`).join('');
+}
+function scrollBest(d){ document.getElementById('bestTrack').scrollBy({left:d*320, behavior:'smooth'}); }
+function renderCatStrip(){
+  const cats=['Dresses','Abayas','Shirts','T-shirts','Trousers','Jeans','Jackets','Outerwear','Tops','Accessories'];
+  document.getElementById('catStrip').innerHTML = cats.map(c=>`<button class="pill !bg-white" onclick="goShop('all','${c}')">${c}</button>`).join('');
+}
+function renderCollections(){
+  document.getElementById('collectionsGrid').innerHTML = COLLECTIONS.map((c,i)=>`<div class="collection-card relative overflow-hidden group cursor-pointer min-h-[320px] md:min-h-[400px] reveal in" onclick="COLLECTIONS[${i}].act()"><img src="${c.img}" class="absolute inset-0 w-full h-full object-cover" alt="${c.name}"><div class="absolute inset-0" style="background:linear-gradient(to top,rgba(20,17,12,.7),transparent 55%)"></div><div class="absolute bottom-0 p-8 text-white"><p class="eyebrow !text-champagne !text-[10px]">${c.tag}</p><h3 class="serif text-3xl mt-2">${c.name}</h3><p class="text-white/70 text-sm mt-1">${c.desc}</p><span class="inline-block mt-4 text-[12px] tracking-[0.2em] uppercase border-b border-champagne pb-1">Shop Now →</span></div></div>`).join('');
+}
+
+/* ================= SHOP ================= */
+function catsFor(g){ const base = g==='men'?['Shirts','T-shirts','Trousers','Jeans','Jackets','Accessories']:g==='women'?['Dresses','Tops','Trousers','Abayas','Outerwear','Accessories']:['Dresses','Abayas','Shirts','T-shirts','Trousers','Jeans','Jackets','Outerwear','Tops','Accessories']; return ['All',...base]; }
+function renderShop(){
+  const effGender = shopState.gender==='new'?'all':shopState.gender;
+  document.getElementById('fCats').innerHTML = catsFor(effGender).map(c=>`<button class="pill ${shopState.category===c?'active':''} !px-3.5 !py-2" onclick="shopState.category='${c}';renderShop()">${c}</button>`).join('');
+  const sizes = effGender==='men'?['S','M','L','XL','30','32','34','36']:['XS','S','M','L','XL','One Size'];
+  document.getElementById('fSizes').innerHTML = ['All',...sizes].map(s=>`<button class="pill ${shopState.size===s?'active':''} !px-3 !py-2" onclick="shopState.size='${s}';renderShop()">${s}</button>`).join('');
+  let list=[...PRODUCTS];
+  if(shopState.gender==='men'||shopState.gender==='women') list=list.filter(p=>p.gender===shopState.gender);
+  if(shopState.gender==='new') list=list.filter(p=>p.badge==='New'||p.added>=8);
+  if(shopState.category!=='All') list=list.filter(p=>p.category===shopState.category);
+  if(shopState.search) list=list.filter(p=>(p.name+p.category+p.gender).toLowerCase().includes(shopState.search.toLowerCase()));
+  list=list.filter(p=>p.price<=shopState.maxPrice);
+  if(shopState.size!=='All') list=list.filter(p=>p.sizes.includes(shopState.size));
+  if(shopState.onlySale) list=list.filter(p=>p.oldPrice);
+  if(shopState.onlyNew) list=list.filter(p=>p.badge==='New'||p.added>=8);
+  const s=shopState.sort;
+  if(s==='low') list.sort((a,b)=>a.price-b.price); else if(s==='high') list.sort((a,b)=>b.price-a.price);
+  else if(s==='newest') list.sort((a,b)=>b.added-a.added); else if(s==='rating') list.sort((a,b)=>b.rating-a.rating);
+  else if(s==='discount') list.sort((a,b)=>discount(b)-discount(a)); else list.sort((a,b)=>b.sold-a.sold);
+  document.getElementById('shopCount').textContent = list.length+' product'+(list.length!==1?'s':'');
+  document.getElementById('shopGrid').innerHTML = list.map(p=>cardHTML(p)).join('');
+  document.getElementById('shopEmpty').classList.toggle('hidden', list.length>0);
+}
+
+/* ================= PRODUCT DETAIL ================= */
+function openProduct(id){
+  const p=byId(id); if(!p) return;
+  currentPD=p; pdSize=null; pdColor=p.colors[0].n; pdQty=1;
+  document.getElementById('pdMain').src=p.images[0]; document.getElementById('pdMain').alt=p.name;
+  document.getElementById('pdCat').textContent=(p.gender==='men'?'Men':'Women')+' · '+p.category;
+  document.getElementById('pdCrumb').textContent=p.name; document.getElementById('pdName').textContent=p.name;
+  document.getElementById('pdStars').innerHTML=stars(p.rating); document.getElementById('pdRev').textContent=`${p.rating} · ${p.reviews} reviews`;
+  document.getElementById('pdPrice').textContent=PKR(p.price);
+  document.getElementById('pdOld').textContent=p.oldPrice?PKR(p.oldPrice):'';
+  const off=discount(p), offEl=document.getElementById('pdOff');
+  if(off){offEl.textContent='−'+off+'%'; offEl.classList.remove('hidden');} else offEl.classList.add('hidden');
+  const st=document.getElementById('pdStock');
+  if(p.stock===0){st.innerHTML='<span class="text-[#8B3A2E]">● Out of Stock</span>';} else if(p.stock<=8){st.innerHTML=`<span class="text-[#8B5A2B]">● Low Stock — only ${p.stock} left. Order soon.</span>`;} else {st.innerHTML='<span class="text-green-800">● In Stock — ready to ship in 24–48h</span>';}
+  document.getElementById('pdDesc').textContent=p.desc; document.getElementById('pdFabric').textContent=p.fabric;
+  document.getElementById('pdSku').textContent=p.sku; document.getElementById('pdCat2').textContent=p.category;
+  document.getElementById('pdBadge').innerHTML=(p.badge?`<span class="badge bg-charcoal text-cream">${p.badge}</span>`:'')+(off?`<span class="badge bg-champagne text-charcoal">−${off}%</span>`:'');
+  document.getElementById('pdThumbs').innerHTML=p.images.map((im,i)=>`<img src="${im}" onclick="pdSetImg(${i},this)" class="thumb ${i===0?'active':''} w-full aspect-square object-cover" alt="view ${i+1}">`).join('');
+  document.getElementById('pdSizes').innerHTML=p.sizes.map(s=>`<button class="size-dot" onclick="pdSetSize('${s}',this)">${s}</button>`).join('');
+  document.getElementById('pdColors').innerHTML=p.colors.map((c,i)=>`<span class="color-dot !w-7 !h-7 ${i===0?'sel':''}" title="${c.n}" style="background:${c.h}" onclick="pdSetColor('${c.n}',this)"></span>`).join('');
+  document.getElementById('pdColorName').textContent=p.colors[0].n;
+  syncPDWish(); updatePDBtn(); document.getElementById('pdQty').textContent='1';
+  const rel=PRODUCTS.filter(x=>x.id!==p.id && (x.gender===p.gender||x.category===p.category)).slice(0,4);
+  document.getElementById('relatedGrid').innerHTML=rel.map(x=>cardHTML(x)).join('');
+  showPage('product');
+}
+function pdSetImg(i,el){ document.getElementById('pdMain').src=currentPD.images[i]; document.querySelectorAll('#pdThumbs .thumb').forEach(t=>t.classList.remove('active')); el.classList.add('active'); }
+function pdSetSize(s,el){ pdSize=s; document.querySelectorAll('#pdSizes .size-dot').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); }
+function pdSetColor(n,el){ pdColor=n; document.getElementById('pdColorName').textContent=n; document.querySelectorAll('#pdColors .color-dot').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); }
+function pdQtyChange(d){ pdQty=Math.min(Math.max(1,pdQty+d), currentPD.stock||9); document.getElementById('pdQty').textContent=pdQty; updatePDBtn(); }
+function updatePDBtn(){ document.getElementById('pdTotalBtn').textContent = currentPD?PKR(currentPD.price*pdQty):''; }
+function syncPDWish(){ const b=document.getElementById('pdWish'); const on=wishlist.has(currentPD.id); b.classList.toggle('active',on); b.querySelector('svg').setAttribute('fill', on?'currentColor':'none'); }
+function pdAddToCart(){
+  if(!pdSize){ toast('Please select a size first.'); document.getElementById('pdSizes').scrollIntoView({behavior:'smooth',block:'center'}); return; }
+  addToCart(currentPD.id, pdSize, pdQty); openCart();
+}
+function pdBuyNow(){ if(!pdSize){toast('Please select a size first.');return;} addToCart(currentPD.id,pdSize,pdQty,true); showPage('checkout'); }
+
+/* ================= QUICK ADD ================= */
+function quickAdd(id){
+  const p=byId(id); quickId=id; qSize=null; qColor=p.colors[0].n;
+  document.getElementById('qImg').src=p.images[0]; document.getElementById('qCat').textContent=(p.gender==='men'?'Men':'Women')+' · '+p.category;
+  document.getElementById('qName').textContent=p.name;
+  document.getElementById('qPrice').innerHTML=`${PKR(p.price)} ${p.oldPrice?`<span class="text-sm text-stone2 line-through font-sans">${PKR(p.oldPrice)}</span>`:''}`;
+  document.getElementById('qBadge').innerHTML=p.badge?`<span class="badge bg-charcoal text-cream">${p.badge}</span>`:'';
+  document.getElementById('qSizes').innerHTML=p.sizes.map(s=>`<button class="size-dot" onclick="qSetSize('${s}',this)">${s}</button>`).join('');
+  document.getElementById('qColors').innerHTML=p.colors.map((c,i)=>`<span class="color-dot !w-6 !h-6 ${i===0?'sel':''}" title="${c.n}" style="background:${c.h}" onclick="qSetColor('${c.n}',this)"></span>`).join('');
+  document.getElementById('qView').onclick=()=>{toggleModal('quickModal',false); openProduct(id);};
+  toggleModal('quickModal',true);
+}
+function qSetSize(s,el){ qSize=s; document.querySelectorAll('#qSizes .size-dot').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); }
+function qSetColor(n,el){ qColor=n; document.querySelectorAll('#qColors .color-dot').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); }
+function confirmQuickAdd(){ if(!qSize){toast('Please choose a size.');return;} addToCart(quickId,qSize,1); toggleModal('quickModal',false); openCart(); }
+
+/* ================= CART / WISHLIST ================= */
+function save(){ localStorage.setItem('velora_cart',JSON.stringify(cart)); localStorage.setItem('velora_wish',JSON.stringify([...wishlist])); }
+function addToCart(id,size,qty,silent){
+  const p=byId(id);
+  if(p.stock===0){ toast('Sorry — this piece is out of stock.'); return; }
+  const key=cart.find(i=>i.id===id&&i.size===size);
+  const cur=key?key.qty:0;
+  if(cur+qty>p.stock){ toast(`Only ${p.stock} available in size ${size}.`); return; }
+  if(key) key.qty+=qty; else cart.push({id,size,qty});
+  save(); renderCart();
+  if(!silent) toast(`${p.name} (${size}) added to bag.`);
+}
+function cartQty(){ return cart.reduce((a,i)=>a+i.qty,0); }
+function cartSubtotal(){ return cart.reduce((a,i)=>a+byId(i.id).price*i.qty,0); }
+function shipCost(){ const s=cartSubtotal(); if(s===0) return 0; if(s>=15000) return 0; return 350; }
+function renderCart(){
+  const n=cartQty(), bc=document.getElementById('bagCount');
+  bc.textContent=n; bc.classList.toggle('hidden',n===0); bc.classList.toggle('flex',n>0);
+  document.getElementById('cartHeadCount').textContent=n?`(${n} item${n>1?'s':''})`:'';
+  const box=document.getElementById('cartItems');
+  if(!cart.length){ box.innerHTML=`<div class="text-center py-14"><div class="serif text-5xl opacity-20">◌</div><h4 class="serif text-xl mt-4">Your bag is empty</h4><p class="text-sm text-stone2 mt-2">Fill it with something beautiful.</p><button onclick="closeAllDrawers();goShop('all')" class="btn-dark mt-6 !py-3">Start Shopping</button></div>`; }
+  else box.innerHTML=cart.map((i,idx)=>{ const p=byId(i.id); return `<div class="flex gap-4 bg-white border hairline p-3">
+    <img src="${p.images[0]}" onclick="closeAllDrawers();openProduct('${p.id}')" class="w-[84px] h-[104px] object-cover cursor-pointer" alt="${p.name}">
+    <div class="flex-1 min-w-0"><p class="text-[10px] tracking-[0.2em] uppercase text-stone2">${p.category}</p><h4 class="serif text-[15px] leading-snug truncate">${p.name}</h4><p class="text-xs text-stone2 mt-0.5">Size: <b class="text-charcoal">${i.size}</b></p>
+    <div class="flex items-center justify-between mt-2"><div class="flex items-center border hairline"><button onclick="chQty(${idx},-1)" class="w-8 h-8 hover:bg-beige">−</button><span class="w-8 text-center text-sm font-semibold">${i.qty}</span><button onclick="chQty(${idx},1)" class="w-8 h-8 hover:bg-beige">+</button></div><b class="text-sm">${PKR(p.price*i.qty)}</b></div></div>
+    <button onclick="rmCart(${idx})" class="text-stone2 hover:text-red-800 text-lg leading-none" aria-label="Remove">×</button></div>`; }).join('');
+  const sub=cartSubtotal(), sh=shipCost();
+  document.getElementById('cartSub').textContent=PKR(sub);
+  document.getElementById('cartShip').innerHTML = sub===0?'—':sh===0?'<b class="text-green-800">FREE</b>':PKR(sh);
+  document.getElementById('cartTotal').textContent=PKR(sub+sh);
+  const pct=Math.min(100, sub/15000*100);
+  document.getElementById('shipBar').style.width=pct+'%';
+  document.getElementById('shipProgressLabel').innerHTML = sub>=15000?'You have unlocked <b>FREE shipping</b> ✦':`Add <b>${PKR(15000-sub)}</b> more for free shipping`;
+  renderWishBadge();
+}
+function chQty(idx,d){ const it=cart[idx], p=byId(it.id); const nq=it.qty+d; if(nq<1) return rmCart(idx); if(nq>p.stock){toast(`Only ${p.stock} available.`);return;} it.qty=nq; save(); renderCart(); if(!document.getElementById('page-checkout').classList.contains('hidden')) renderCheckoutSummary(); }
+function rmCart(idx){ const p=byId(cart[idx].id); cart.splice(idx,1); save(); renderCart(); toast(`${p.name} removed.`); if(!document.getElementById('page-checkout').classList.contains('hidden')) renderCheckoutSummary(); }
+function openCart(){ renderCart(); document.getElementById('cartDrawer').classList.add('open'); document.getElementById('overlay').classList.add('show'); }
+function openWishlist(){ renderWishlist(); document.getElementById('wishDrawer').classList.add('open'); document.getElementById('overlay').classList.add('show'); }
+function closeAllDrawers(){ document.querySelectorAll('.drawer').forEach(d=>d.classList.remove('open')); document.getElementById('overlay').classList.remove('show'); }
+function toggleWish(id){ if(wishlist.has(id)){wishlist.delete(id); toast('Removed from wishlist.');} else {wishlist.add(id); toast('Saved to wishlist ♡');} save(); renderCart(); renderWishlist(); document.querySelectorAll('.p-card').forEach(()=>{}); refreshWishHearts(); if(currentPD&&currentPD.id===id) syncPDWish(); }
+function refreshWishHearts(){ renderNew(); renderBest(); if(!document.getElementById('page-shop').classList.contains('hidden')) renderShop(); if(!document.getElementById('page-product').classList.contains('hidden')&&currentPD){const rel=document.getElementById('relatedGrid'); if(rel) rel.innerHTML=PRODUCTS.filter(x=>x.id!==currentPD.id&&(x.gender===currentPD.gender||x.category===currentPD.category)).slice(0,4).map(x=>cardHTML(x)).join('');} }
+function renderWishBadge(){ const n=wishlist.size, el=document.getElementById('wishCount'); el.textContent=n; el.classList.toggle('hidden',n===0); el.classList.toggle('flex',n>0); }
+function renderWishlist(){
+  const box=document.getElementById('wishItems');
+  if(!wishlist.size){ box.innerHTML=`<div class="text-center py-14"><div class="serif text-5xl opacity-20">♡</div><h4 class="serif text-xl mt-4">Nothing saved yet</h4><p class="text-sm text-stone2 mt-2">Tap the heart on any piece to save it here.</p></div>`; return; }
+  box.innerHTML=[...wishlist].map(id=>{ const p=byId(id); if(!p) return ''; return `<div class="flex gap-4 bg-white border hairline p-3"><img src="${p.images[0]}" onclick="closeAllDrawers();openProduct('${p.id}')" class="w-[84px] h-[104px] object-cover cursor-pointer" alt=""><div class="flex-1"><h4 class="serif text-[15px]">${p.name}</h4><p class="text-sm font-semibold mt-1">${PKR(p.price)}</p><div class="flex gap-2 mt-2"><button onclick="quickAdd('${p.id}')" class="flex-1 bg-charcoal text-cream text-[11px] tracking-widest uppercase py-2.5">Add to Bag</button><button onclick="toggleWish('${p.id}');renderWishlist()" class="w-10 border hairline">×</button></div></div></div>`; }).join('');
+}
+
+/* ================= SEARCH ================= */
+function openSearch(){ document.getElementById('searchOverlay').classList.remove('hidden'); document.getElementById('searchOverlay').classList.add('flex'); setTimeout(()=>document.getElementById('searchInput').focus(),50); liveSearch(''); }
+function closeSearch(){ document.getElementById('searchOverlay').classList.add('hidden'); document.getElementById('searchOverlay').classList.remove('flex'); }
+function quickSearch(t){ document.getElementById('searchInput').value=t; liveSearch(t); }
+function liveSearch(q){
+  q=(q||'').toLowerCase().trim();
+  let list=q?PRODUCTS.filter(p=>(p.name+' '+p.category+' '+p.gender).toLowerCase().includes(q)):PRODUCTS.slice(0,4);
+  document.getElementById('searchResults').innerHTML = (q?`<p class="col-span-full text-sm text-stone2">${list.length} result${list.length!==1?'s':''} for “${q}”</p>`:`<p class="col-span-full text-sm text-stone2">Suggested for you</p>`)+list.slice(0,8).map(p=>`<div class="bg-white border hairline cursor-pointer hover:shadow-lg transition group" onclick="closeSearch();openProduct('${p.id}')"><div class="overflow-hidden aspect-[3/3.6]"><img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700" alt=""></div><div class="p-3"><p class="serif text-sm truncate">${p.name}</p><p class="text-xs font-semibold mt-1">${PKR(p.price)}</p></div></div>`).join('')||`<p class="col-span-full text-center py-10 text-stone2">No matches. Try “dress”, “abaya” or “jacket”.</p>`;
+}
+
+/* ================= CHECKOUT ================= */
+function renderCheckoutSummary(){
+  if(!cart.length && document.getElementById('page-checkout') && !document.getElementById('page-checkout').classList.contains('hidden')){ /* keep */ }
+  document.getElementById('checkoutItems').innerHTML = cart.length?cart.map(i=>{const p=byId(i.id);return `<div class="flex gap-3 items-center"><div class="relative shrink-0"><img src="${p.images[0]}" class="w-14 h-[70px] object-cover" alt=""><span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-champagne text-charcoal text-[11px] font-bold flex items-center justify-center">${i.qty}</span></div><div class="flex-1 min-w-0"><p class="text-sm truncate">${p.name}</p><p class="text-xs opacity-60">Size ${i.size}</p></div><b class="text-sm">${PKR(p.price*i.qty)}</b></div>`;}).join(''):'<p class="text-sm opacity-60">Your bag is empty. <a href="#" onclick="goShop(\'all\');return false;" class="underline">Continue shopping →</a></p>';
+  const sub=cartSubtotal();
+  let shipEl=document.querySelector('input[name="ship"]:checked'); let ship=shipEl?shipEl.value:'350';
+  let shipAmt = ship==='850'?850:(sub>=15000?0:350);
+  if(ship==='cod') shipAmt = sub>=15000?0:350;
+  let disc=0; if(coupon==='VELORA10') disc=Math.round(sub*0.10);
+  const total=sub-disc+shipAmt;
+  document.getElementById('checkoutTotals').innerHTML=`<div class="flex justify-between opacity-80"><span>Subtotal</span><span>${PKR(sub)}</span></div>${disc?`<div class="flex justify-between text-champagne"><span>Coupon VELORA10 (−10%)</span><span>−${PKR(disc)}</span></div>`:''}<div class="flex justify-between opacity-80"><span>Shipping</span><span>${sub===0?'—':shipAmt===0?'FREE':PKR(shipAmt)}</span></div><div class="flex justify-between serif text-xl pt-3 border-t border-white/15"><span>Total</span><span>${PKR(total)}</span></div>`;
+  window._checkout={sub,disc,shipAmt,total};
+}
+function applyCoupon(){ const v=document.getElementById('couponInput').value.trim().toUpperCase(); if(v==='VELORA10'){coupon=v; toast('Promo applied — 10% off.');} else {coupon=null; toast('Invalid code. Try VELORA10.');} renderCheckoutSummary(); }
+function placeOrder(e){
+  e.preventDefault();
+  if(!cart.length){ toast('Your bag is empty.'); return; }
+  const name=document.getElementById('cName').value.trim(), email=document.getElementById('cEmail').value.trim(), city=document.getElementById('cCity').value;
+  const oid='VLR-'+Math.floor(1000+Math.random()*9000);
+  const t=window._checkout||{total:cartSubtotal()+shipCost()};
+  // decrement stock
+  cart.forEach(i=>{ const p=byId(i.id); p.stock=Math.max(0,p.stock-i.qty); p.sold+=i.qty; });
+  demoOrders.unshift({id:oid,name,email,city,items:cartQty(),total:t.total,status:'Processing',date:new Date().toISOString().slice(0,10)});
+  document.getElementById('cfName').textContent=name.split(' ')[0];
+  document.getElementById('cfOrder').textContent=oid; document.getElementById('cfEmail').textContent=email;
+  document.getElementById('cfItems').innerHTML=`<div class="flex justify-between text-sm mb-4"><span class="text-stone2">Order</span><b>${oid}</b></div><div class="space-y-3">${cart.map(i=>{const p=byId(i.id);return `<div class="flex gap-3 items-center"><img src="${p.images[0]}" class="w-12 h-14 object-cover"><div class="flex-1"><p class="text-sm font-medium">${p.name}</p><p class="text-xs text-stone2">Size ${i.size} × ${i.qty}</p></div><b class="text-sm">${PKR(p.price*i.qty)}</b></div>`;}).join('')}</div><div class="flex justify-between serif text-lg mt-5 pt-4 border-t hairline"><span>Charged (simulated)</span><span>${PKR(t.total)}</span></div><p class="text-xs text-stone2 mt-3">Shipping to ${name}, ${document.getElementById('cAddr').value}, ${city} · ${document.getElementById('cPhone').value}</p>`;
+  cart=[]; coupon=null; save(); renderCart();
+  showPage('confirm'); toast('Order placed successfully. Shukriya!');
+}
+
+/* ================= ADMIN ================= */
+function renderAdminGate(){ document.getElementById('adminLock').classList.toggle('hidden',adminAuthed); document.getElementById('adminPanel').classList.toggle('hidden',!adminAuthed); if(adminAuthed) renderAdmin(); }
+function adminLogin(){ const v=document.getElementById('adminPass').value; if(v==='velora123'){adminAuthed=true; renderAdminGate(); toast('Welcome back, Admin.');} else toast('Incorrect passcode. Hint: velora123'); }
+function adminLogout(){ adminAuthed=false; renderAdminGate(); }
+function adminTab(name,el){ document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active')); el.classList.add('active'); document.querySelectorAll('.atab').forEach(t=>t.classList.add('hidden')); document.getElementById('atab-'+name).classList.remove('hidden'); if(name==='overview'||name==='analytics') setTimeout(drawCharts,60); }
+function renderAdmin(){
+  const rev=demoOrders.reduce((a,o)=>a+o.total,0)+2840000;
+  const units=PRODUCTS.reduce((a,p)=>a+p.sold,0);
+  document.getElementById('admOrderDot').textContent=demoOrders.length+' orders';
+  document.getElementById('adminStats').innerHTML=[
+    ['Total Revenue',PKR(rev),'+18.2% vs last month'],['Orders',demoOrders.length+312,'+12 new this week'],['Units Sold',units.toLocaleString(),'Across 26 styles'],['Avg. Order Value',PKR(Math.round(rev/(demoOrders.length+312))),'Healthy basket size']
+  ].map(s=>`<div class="stat-card"><p class="text-[11px] tracking-[0.2em] uppercase text-stone2 font-semibold">${s[0]}</p><p class="serif text-2xl md:text-3xl mt-2">${s[1]}</p><p class="text-xs text-green-800 mt-1">${s[2]}</p></div>`).join('');
+  document.getElementById('adminRecent').innerHTML=`<table class="w-full text-sm min-w-[560px]"><thead><tr class="text-left text-[11px] tracking-widest uppercase text-stone2 border-b hairline"><th class="py-2 pr-4">Order</th><th class="py-2 pr-4">Customer</th><th class="py-2 pr-4">Total</th><th class="py-2">Status</th></tr></thead><tbody>${demoOrders.slice(0,5).map(o=>`<tr class="border-b hairline"><td class="py-3 pr-4 font-semibold">${o.id}</td><td class="py-3 pr-4">${o.name}</td><td class="py-3 pr-4">${PKR(o.total)}</td><td class="py-3"><span class="text-[11px] px-3 py-1 rounded-full ${o.status==='Delivered'?'bg-green-100 text-green-900':o.status==='Shipped'?'bg-blue-100 text-blue-900':'bg-[#F3E8D3] text-[#7A5B2E]'}">${o.status}</span></td></tr>`).join('')}</tbody></table>`;
+  renderAdminProducts(); renderAdminOrders(); renderAdminCustomers(); renderInventory(); renderTop();
+  setTimeout(drawCharts,80);
+}
+function renderAdminProducts(){
+  const q=(document.getElementById('admPSearch')?.value||'').toLowerCase();
+  const list=PRODUCTS.filter(p=>!q||(p.name+p.category).toLowerCase().includes(q));
+  document.getElementById('admPCount').textContent=PRODUCTS.length;
+  document.getElementById('admPTbody').innerHTML=list.map(p=>`<tr class="border-b hairline hover:bg-cream/60"><td class="p-3"><div class="flex items-center gap-3"><img src="${p.images[0]}" class="w-11 h-14 object-cover"><div><p class="font-semibold text-[13px]">${p.name}</p><p class="text-xs text-stone2">${p.sku} · ${p.gender}</p></div></div></td><td class="p-3">${p.category}</td><td class="p-3 font-semibold">${PKR(p.price)}</td><td class="p-3">${p.stock<=8?`<b class="text-red-800">${p.stock} ⚠</b>`:p.stock}</td><td class="p-3">${p.sold}</td><td class="p-3 text-right whitespace-nowrap"><button onclick="openProductModal('${p.id}')" class="text-xs border hairline px-3 py-1.5 hover:bg-charcoal hover:text-cream transition">Edit</button> <button onclick="deleteProduct('${p.id}')" class="text-xs border border-red-200 text-red-800 px-3 py-1.5 hover:bg-red-800 hover:text-white transition">Delete</button></td></tr>`).join('');
+}
+function openProductModal(id){
+  editingId=id||null; document.getElementById('pmTitle').textContent=id?'Edit Product':'Add Product';
+  if(id){ const p=byId(id); pmName.value=p.name; pmGender.value=p.gender; pmCat.value=p.category; pmPrice.value=p.price; pmOld.value=p.oldPrice||''; pmStock.value=p.stock; pmBadge.value=p.badge||''; pmSizes.value=p.sizes.join(', '); pmImg.value=p.images[0]; pmDesc.value=p.desc; }
+  else { ['pmName','pmPrice','pmOld','pmStock','pmSizes','pmImg','pmDesc'].forEach(k=>document.getElementById(k).value=''); }
+  toggleModal('prodModal',true);
+}
+function saveProduct(){
+  const name=pmName.value.trim(), price=+pmPrice.value, stock=+pmStock.value;
+  if(!name||!price){ toast('Name and price are required.'); return; }
+  const data={name, gender:pmGender.value, category:pmCat.value, price, oldPrice:+pmOld.value||null, stock:isNaN(stock)?10:stock, badge:pmBadge.value, sizes:pmSizes.value?pmSizes.value.split(',').map(s=>s.trim()).filter(Boolean):['S','M','L'], images:[pmImg.value||U('photo-1441984904996-e0b6ba687e04'), U('photo-1445205170230-053b83016050')], desc:pmDesc.value||'A refined VELORA essential crafted from premium fabric with elegant detailing.', colors:[{n:'As Shown',h:'#8B7058'}], rating:4.5, reviews:12, sold:0, added:10, sku:'VL-NEW-'+Math.floor(Math.random()*900+100), fabric:'Premium fabric. Dry clean / gentle wash recommended.'};
+  if(editingId){ Object.assign(byId(editingId), data); toast('Product updated.'); }
+  else { data.id='p'+Date.now(); PRODUCTS.unshift(data); toast('Product added to catalogue.'); }
+  toggleModal('prodModal',false); renderAdminProducts(); renderInventory(); renderNew(); renderBest();
+}
+function deleteProduct(id){ if(!confirm('Delete this product?')) return; PRODUCTS=PRODUCTS.filter(p=>p.id!==id); cart=cart.filter(i=>i.id!==id); wishlist.delete(id); save(); renderCart(); renderAdminProducts(); renderInventory(); toast('Product deleted.'); }
+function renderAdminOrders(){
+  document.getElementById('admOTbody').innerHTML=demoOrders.map((o,i)=>`<tr class="border-b hairline"><td class="p-3 font-semibold">${o.id}</td><td class="p-3">${o.name}<br><span class="text-xs text-stone2">${o.city}</span></td><td class="p-3">${o.items}</td><td class="p-3 font-semibold">${PKR(o.total)}</td><td class="p-3"><select onchange="demoOrders[${i}].status=this.value;renderAdmin();toast('Order ${o.id} → '+this.value)" class="lux-input !py-1.5 !px-2 !w-auto text-xs">${['Processing','Shipped','Delivered','Cancelled'].map(s=>`<option ${o.status===s?'selected':''}>${s}</option>`).join('')}</select></td><td class="p-3 text-xs text-stone2">${o.date}</td></tr>`).join('');
+}
+function renderAdminCustomers(){
+  document.getElementById('admCTbody').innerHTML=customers.map(c=>`<tr class="border-b hairline"><td class="p-3"><b>${c.name}</b><br><span class="text-xs text-stone2">${c.email}</span></td><td class="p-3">${c.city}</td><td class="p-3">${c.orders}</td><td class="p-3 font-semibold">${PKR(c.spent)}</td><td class="p-3"><span class="text-[11px] px-3 py-1 rounded-full ${c.tier==='Gold'?'bg-[#F3E8D3] text-[#7A5B2E]':c.tier==='Silver'?'bg-gray-100 text-gray-800':'bg-orange-50 text-orange-900'}">${c.tier}</span></td></tr>`).join('');
+}
+function renderInventory(){
+  document.getElementById('invList').innerHTML=PRODUCTS.map(p=>{const pct=Math.min(100,p.stock/60*100);const low=p.stock<=8;return `<div class="bg-white border hairline p-4 flex flex-wrap items-center gap-4"><img src="${p.images[0]}" class="w-12 h-14 object-cover"><div class="flex-1 min-w-[200px]"><div class="flex justify-between text-sm"><b>${p.name}</b><span class="${low?'text-red-800 font-bold':'text-stone2'}">${p.stock} in stock ${low?'· LOW':''}</span></div><div class="h-2 bg-beige rounded-full mt-2 overflow-hidden"><div class="h-full rounded-full ${low?'bg-red-800':'bg-charcoal'}" style="width:${pct}%"></div></div></div><button onclick="byId('${p.id}').stock+=12;renderInventory();renderAdminProducts();toast('Restocked +12 units.')" class="btn-outline !py-2 !px-4">+ Restock</button></div>`;}).join('');
+}
+function renderTop(){
+  const top=[...PRODUCTS].sort((a,b)=>b.sold-a.sold).slice(0,5); const max=top[0].sold;
+  document.getElementById('topProducts').innerHTML=top.map((p,i)=>`<div class="flex items-center gap-3"><span class="serif text-xl w-7 text-bark">#${i+1}</span><img src="${p.images[0]}" class="w-11 h-13 h-[52px] object-cover"><div class="flex-1"><p class="text-sm font-semibold truncate">${p.name}</p><div class="h-1.5 bg-beige rounded-full mt-1.5"><div class="h-full bg-charcoal rounded-full" style="width:${p.sold/max*100}%"></div></div></div><b class="text-sm">${p.sold}</b></div>`).join('');
+}
+function drawCharts(){
+  if(typeof Chart==='undefined') return;
+  Object.values(charts).forEach(c=>c.destroy()); charts={};
+  const rc=document.getElementById('chRev'); if(rc&&!document.getElementById('atab-overview').classList.contains('hidden')){ charts.rev=new Chart(rc,{type:'line',data:{labels:['Tue','Wed','Thu','Fri','Sat','Sun','Mon'],datasets:[{data:[182000,240000,198000,310000,285000,392000,348000],borderColor:'#29251F',backgroundColor:'rgba(213,194,165,.35)',fill:true,tension:.45,pointBackgroundColor:'#8B7058'}]},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'Rs.'+(v/1000)+'k'}}},maintainAspectRatio:false}}); }
+  const cc=document.getElementById('chCat'); if(cc&&!document.getElementById('atab-overview').classList.contains('hidden')){ charts.cat=new Chart(cc,{type:'doughnut',data:{labels:['Dresses','Abayas','Shirts','Outerwear','Accessories','Denims'],datasets:[{data:[28,22,16,14,12,8],backgroundColor:['#29251F','#8B7058','#D5C2A5','#E9DFD0','#6B6257','#C9A24B']}]},options:{plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}},maintainAspectRatio:false}}); }
+  const gc=document.getElementById('chGender'); if(gc&&!document.getElementById('atab-analytics').classList.contains('hidden')){ charts.gen=new Chart(gc,{type:'bar',data:{labels:['Dresses','Abayas','Shirts','Tees','Outerwear','Jackets'],datasets:[{label:'Women',data:[890,1330,0,0,900,0],backgroundColor:'#8B7058'},{label:'Men',data:[0,0,850,2120,0,420],backgroundColor:'#29251F'}]},options:{plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true}},maintainAspectRatio:false}}); }
+}
+
+/* ================= MISC UI ================= */
+function toggleModal(id,show){ document.getElementById(id).classList.toggle('show',show); document.body.style.overflow=show?'hidden':''; if(!show) document.body.style.overflow=''; }
+function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.innerHTML=`<span class="text-champagne serif text-lg">✦</span><span>${msg}</span>`; document.getElementById('toasts').appendChild(t); setTimeout(()=>{t.classList.add('out'); setTimeout(()=>t.remove(),400);},2800); }
+function subscribe(e){ e.preventDefault(); const em=(e.target.querySelector('input[type=email]').value); toast(`Welcome to the Velora Circle — code VELORA10 sent to ${em}.`); e.target.reset(); }
+function contactSubmit(e){ e.preventDefault(); toast('Message received. Our concierge will reply within 24 hours.'); e.target.reset(); }
+let testiIdx=0, testiTimer;
+function renderTesti(){
+  const t=TESTIS[testiIdx];
+  const box=document.getElementById('testiBox'); box.style.opacity=0;
+  setTimeout(()=>{ box.innerHTML=`<div class="serif text-6xl text-champagne leading-none">“</div><p class="serif text-xl md:text-2xl leading-relaxed italic max-w-[760px] mx-auto -mt-4">${t.q}</p><div class="flex items-center justify-center gap-3 mt-7"><img src="${t.img}" class="w-12 h-12 rounded-full object-cover border-2 border-champagne" alt="${t.n}"><div class="text-left"><p class="font-semibold text-sm">${t.n}</p><p class="text-xs text-stone2">${t.c} · ★★★★★</p></div></div>`; box.style.opacity=1; },300);
+  document.getElementById('testiDots').innerHTML=TESTIS.map((_,i)=>`<button onclick="testiIdx=${i};renderTesti();resetTesti()" class="h-2 rounded-full transition-all ${i===testiIdx?'w-8 bg-charcoal':'w-2 bg-charcoal/25'}"></button>`).join('');
+}
+function resetTesti(){ clearInterval(testiTimer); testiTimer=setInterval(()=>{testiIdx=(testiIdx+1)%TESTIS.length; renderTesti();},6000); }
+function observeReveals(){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in'); io.unobserve(e.target);}}),{threshold:.12});
+  document.querySelectorAll('.reveal:not(.in)').forEach(el=>io.observe(el));
+}
+// countdown
+let cdEnd=Date.now()+ (2*24*3600+11*3600+45*60)*1000;
+setInterval(()=>{ let d=Math.max(0,cdEnd-Date.now()); const dd=Math.floor(d/86400000),hh=Math.floor(d%86400000/3600000),mm=Math.floor(d%3600000/60000),ss=Math.floor(d%60000/1000); const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=String(v).padStart(2,'0');}; set('cdD',dd);set('cdH',hh);set('cdM',mm);set('cdS',ss); },1000);
+// announcement rotator
+const ANN=['Complimentary shipping on orders over PKR 15,000','Festive Edit — Up to 30% off selected styles','Cash on Delivery available nationwide','New: The Modest Edit — premium abayas just landed']; let annI=0;
+setInterval(()=>{ const el=document.getElementById('announceText'); el.style.opacity=0; setTimeout(()=>{annI=(annI+1)%ANN.length; el.textContent=ANN[annI]; el.style.opacity=1;},400); },4500);
+// header scroll + top btn
+window.addEventListener('scroll',()=>{ document.getElementById('siteHeader').classList.toggle('scrolled',scrollY>30); const tt=document.getElementById('toTop'); if(scrollY>700){tt.classList.remove('hidden');tt.classList.add('flex');} else {tt.classList.add('hidden');tt.classList.remove('flex');} });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){closeSearch();closeAllDrawers();toggleModal('quickModal',false);toggleModal('sizeModal',false);toggleModal('prodModal',false);} });
+
+/* ================= INIT ================= */
+window.addEventListener('load',()=>{
+  setTimeout(()=>document.getElementById('preloader').classList.add('hide'),1400);
+  const m=['Atelier Craftsmanship','Premium Silk & Cashmere','Men · Women · Modestwear','Free Shipping Over PKR 15,000','VELORA — Elegance in Every Detail'];
+  const html=m.map(x=>`<span class="whitespace-nowrap">✦ ${x}</span>`).join('');
+  document.getElementById('marqueeA').innerHTML=html; document.getElementById('marqueeB').innerHTML=html;
+  renderNew(); renderBest(); renderCatStrip(); renderCart(); renderTesti(); resetTesti(); observeReveals();
+  document.getElementById('adminPass')?.addEventListener('keydown',e=>{if(e.key==='Enter')adminLogin();});
+});
+</script>
+</body>
+</html>
